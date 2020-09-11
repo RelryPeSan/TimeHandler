@@ -1,0 +1,4 @@
+/target/
+copy-jar-to-server.bat
+
+/src/main/resources/todo.txt

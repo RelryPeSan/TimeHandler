@@ -1,0 +1,111 @@
+name: TimeHandler
+version: 0.8.1-dev
+main: me.reratos.timehandler.TimeHandler
+author: Relry
+database: false
+website: none
+description: >
+    Permite manipular o tempo dos mundos e/ou fixar uma condição para o mesmo.
+
+commands:
+    timehandler:
+        description: Plugin Time Handler para manipular o tempo dos mundos do servidor.
+        aliases: [th]
+        permission: timehandler.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /timehandler <action> [world]
+    "timehandler info":
+        description: Comando para verificar a configuração do mundo no timehandler.
+        aliases: ["th info"]
+        permission: timehandler.info.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /timehandler info [world]
+    "timehandler help":
+        description: Comando para listar os camandos do plugin timehandler.
+        aliases: ["th help"]
+        permission: timehandler.help.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /timehandler help [comando]
+    "timehandler list":
+        description: Comando para listar os mundos configurados no timehandler.
+        aliases: ["th list"]
+        permission: timehandler.list.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /timehandler list
+    "timehandler remove":
+        description: Comando para remover configuração do mundo no timehandler.
+        aliases: ["th remove"]
+        permission: timehandler.remove.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /timehandler remove [world]
+    "timehandler set":
+        description: Comando para configurar mundo no timehandler.
+        aliases: ["th set"]
+        permission: timehandler.set.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /timehandler set [world] <property> <value>
+    day:
+        description: Comando para definir tempo do mundo para 1000 ciclos(dia).
+        aliases: [thd]
+        permission: timehandler.time.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /day [world]
+    night:
+        description: Comando para definir tempo do mundo para 19000 ciclos(noite).
+        aliases: [thn]
+        permission: timehandler.time.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /night [world]
+    rain:
+        description: Comando para definir tempo do mundo para chuvoso.
+        aliases: [thr]
+        permission: timehandler.weather.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /rain [world]
+    thundering:
+        description: Comando para definir tempo do mundo para trovejoso.
+        aliases: [tht]
+        permission: timehandler.weather.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /thundering [world]
+    calm:
+        description: Comando para definir tempo do mundo para calmo(sem chuva).
+        aliases: [thc]
+        permission: timehandler.weather.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /calm [world]
+
+permissions:
+    timehandler.*:
+        description: Dá acesso para usar os comando do plugin TimeHandler.
+        default: op
+        children:
+            timehandler.info.use: true
+            timehandler.help.use: true
+            timehandler.list.use: true
+            timehandler.remove.use: true
+            timehandler.set.use: true
+            timehandler.time.use: true
+            timehandler.weather.use: true
+    timehandler.info.use:
+        description: Dá acesso para ver informações dos mundos no plugin TimeHandler.
+        default: op
+    timehandler.help.use:
+        description: Dá acesso para ver a lista de comandos do plugin TimeHandler.
+        default: op
+    timehandler.list.use:
+        description: Dá acesso para ver a lista dos mundos já configurados no plugin TimeHandler.
+        default: op
+    timehandler.set.use:
+        description: Dá acesso para configurar mundo no plugin TimeHandler.
+        default: op
+    timehandler.remove.use:
+        description: Dá acesso para remover configuração do mundo no plugin TimeHandler.
+        default: op
+    timehandler.time.use:
+        description: Dá acesso para mudar o tempo do mundo para dia ou noite.
+        default: op
+    timehandler.weather.use:
+        description: Dá acesso para mudar o tempo do mundo para chuvoso ou calmo.
+        default: op
+        

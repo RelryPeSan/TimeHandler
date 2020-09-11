@@ -1,0 +1,6 @@
+# messages
+not-permission-command: "Você não tem permissão para usar este comando!"
+player-only-command: "Comando só pode ser utilizado por um Player"
+# configWorld
+configWorld:
+    
