@@ -11,9 +11,11 @@ public class WorldConfig {
 			return;
 		}
 
+		sendMessage(sender, "enabled: " + getValue(list, "enabled"));
 		sendMessage(sender, "weather: " + getValue(list, "weather"));
 		sendMessage(sender, "thunder: " + getValue(list, "thunder"));
 		sendMessage(sender, "time: " + getValue(list, "time"));
+		sendMessage(sender, "timeFixed: " + getValue(list, "timeFixed"));
 	}
 	
 	private static void sendMessage(CommandSender sender, String message) {

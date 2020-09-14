@@ -1,5 +1,5 @@
 name: TimeHandler
-version: 0.8.1-dev
+version: 1.0.0-beta
 main: me.reratos.timehandler.TimeHandler
 author: Relry
 database: false

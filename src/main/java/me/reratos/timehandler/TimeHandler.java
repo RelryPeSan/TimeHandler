@@ -1,26 +1,21 @@
 package me.reratos.timehandler;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import me.reratos.timehandler.core.TimeManager;
 import me.reratos.timehandler.core.WeatherManager;
+import me.reratos.timehandler.events.WorldListener;
 import me.reratos.timehandler.handler.CommandHandler;
-import me.reratos.timehandler.handler.ListenerHandler;
 import me.reratos.timehandler.handler.TabCompletion;
 
 public class TimeHandler extends JavaPlugin {
@@ -32,30 +27,30 @@ public class TimeHandler extends JavaPlugin {
     @Override
     public void onEnable() {
     	plugin = this;
-    	try {
-
-    	    DumperOptions options = new DumperOptions();
-    	    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-    	    configPlugin = new Yaml(options);
-    	    
-    	    FileWriter arq = new FileWriter("plugins/TimeHandler/configWorlds.yml");
-//			configPlugin.load((new FileInputStream(arq)));
-
-			Map<String, Map<String, String>> arqYml = (Map<String, Map<String, String>>) new HashMap<String, Map<String, String>>();
-			Map<String, String> worlds = (Map<String, String>) new HashMap<String, String>();
-
-			worlds.put("world", "NORMAL");
-			worlds.put("void", "NORMAL");
-			worlds.put("world_nether", "NETHER");
-			arqYml.put("mundos", worlds);
-
-//			String ret = configPlugin.dump(arqYml);
-			configPlugin.dump(arqYml, arq);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//    	try {
+//
+//    	    DumperOptions options = new DumperOptions();
+//    	    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+//    	    configPlugin = new Yaml(options);
+//    	    
+//    	    FileWriter arq = new FileWriter("plugins/TimeHandler/configWorlds.yml");
+////			configPlugin.load((new FileInputStream(arq)));
+//
+//			Map<String, Map<String, String>> arqYml = (Map<String, Map<String, String>>) new HashMap<String, Map<String, String>>();
+//			Map<String, String> worlds = (Map<String, String>) new HashMap<String, String>();
+//
+//			worlds.put("world", "NORMAL");
+//			worlds.put("void", "NORMAL");
+//			worlds.put("world_nether", "NETHER");
+//			arqYml.put("mundos", worlds);
+//
+////			String ret = configPlugin.dump(arqYml);
+//			configPlugin.dump(arqYml, arq);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
     	
-    	Bukkit.getPluginManager().registerEvents(new ListenerHandler(), this);
+    	Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 
     	TabCompletion tabCompletion = new TabCompletion();
     	getCommand("timehandler").setTabCompleter(tabCompletion);
@@ -74,15 +69,12 @@ public class TimeHandler extends JavaPlugin {
     		}
     	}
     	
+    	initializeTasks();
+    	
     }
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
-//        if(!(sender instanceof Player)) {
-//            sendMessage(config.getString(Config.STR_PLAYER_ONLY_COMMAND));
-//            return false;
-//        }
         
         switch(command.getName()) {
             case "timehandler":
@@ -210,7 +202,7 @@ public class TimeHandler extends JavaPlugin {
     	return Bukkit.getWorld(worldName) != null;
     }
 
-    private static void sendMessage(String message) {
+    public static void sendMessage(String message) {
     	Bukkit.getConsoleSender()
     		.sendMessage(ChatColor.GOLD + "[TimeHandler] " + ChatColor.RESET + message);
     }
@@ -221,6 +213,16 @@ public class TimeHandler extends JavaPlugin {
     
     public static void broadcastMessage(String message) {
     	Bukkit.broadcastMessage(ChatColor.GOLD + "[TimeHandler] " + ChatColor.RESET + message);
+    }
+    
+    private static void initializeTasks() {
+    	for(String nameWorld: CommandHandler.getWorldsTimeHandler()) {
+    		World w = Bukkit.getWorld(nameWorld);
+    		
+    		if(w != null) {
+    			TimeManager.initTask(w);
+    		}
+    	}
     }
 			
 }

@@ -13,8 +13,11 @@ import org.bukkit.configuration.MemorySection;
 
 import me.reratos.timehandler.TimeHandler;
 import me.reratos.timehandler.WorldConfig;
+import me.reratos.timehandler.core.TimeManager;
 import me.reratos.timehandler.core.WeatherManager;
+import me.reratos.timehandler.core.WorldManager;
 import me.reratos.timehandler.handler.commands.HelpCommand;
+import me.reratos.timehandler.handler.commands.SetCommand;
 
 public class CommandHandler {
 	
@@ -95,111 +98,22 @@ public class CommandHandler {
 //			return false;
 //		}
 
-		TimeHandler.config.set("configWorld." + worldName, null);
-		TimeHandler.config.set("configWorld." + worldName + ".weather", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".thunder", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".time", "default");
-		
-		TimeHandler.plugin.saveConfig();
-		
-		TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Configuração padrão criada para o mundo: " + 
-				ChatColor.GREEN + worldName);
-		
-		return true;
+		return SetCommand.commandSetDefault(sender, worldName);
 	}
 
 	public static boolean set(CommandSender sender, String worldName, String property, String value) {
+		WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
 		
 		if(!TimeHandler.existWorld(worldName)) {
 			TimeHandler.sendMessage(sender, ChatColor.RED + "Este mundo não existe: " + ChatColor.UNDERLINE + worldName);
 			return false;
+		} else if(wm == null) {
+			TimeHandler.sendMessage(sender, "Este mundo ainda não foi configurado no plugin, utilize " + 
+					ChatColor.GREEN + "/th set " + worldName + ChatColor.RESET + " para configura-ló.");
+			return false;
 		}
-
-		final String weather = "weather";
-		final String thunder = "thunder";
-		final String time = "time";
-		final String timeFixed = "time-fixed";
-
-		final String optionDefault 	= "default";
-		final String optionRain 	= "rain";
-		final String optionCalm 	= "calm";
-		final String optionNone 	= "none";
-		final String optionAlways 	= "always";
-		final String optionDay 		= "day";
-		final String optionNight 	= "night";
-		final String optionFixed 	= "fixed";
 		
-//		weather: default/rain/calm
-//		thunder: default/none/always
-//		time: 	 default/day/night/fixed
-		switch (property) {
-			case weather:
-				switch (value) {
-					case optionDefault:
-					case optionRain:
-					case optionCalm:
-						TimeHandler.config.set("configWorld." + worldName + "." + property, value);
-						break;
-					default:
-						TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-								"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido.");
-						return false;
-				}
-				break;
-				
-			case thunder:
-				switch (value) {
-					case optionDefault:
-					case optionNone:
-					case optionAlways:
-						TimeHandler.config.set("configWorld." + worldName + "." + property, value);
-						break;
-					default:
-						TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-								"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido.");
-						return false;
-				}
-				break;
-				
-			case time:
-				switch (value) {
-					case optionDefault:
-					case optionDay:
-					case optionNight:
-					case optionFixed:
-						TimeHandler.config.set("configWorld." + worldName + "." + property, value);
-						break;
-					default:
-						TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-								"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido.");
-						return false;
-				}
-				break;
-				
-			case timeFixed:
-				try {
-					int tempo = Integer.parseInt(value);
-					if(tempo >= 0 && tempo < 24000) {
-						TimeHandler.config.set("configWorld." + worldName + "." + property, tempo);
-					} else {
-						throw new NumberFormatException();
-					}
-					
-				} catch (NumberFormatException e) {
-					TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + 
-							ChatColor.RESET + "' não é um tempo válido(0 - 23999) para a propriedade " + 
-							ChatColor.AQUA + property + ChatColor.RESET + "");
-					return false;
-				}
-				break;
-	
-			default:
-				return false;
-		}
-
-		TimeHandler.plugin.saveConfig();
-		
-		return true;
+		return SetCommand.commandSetBase(sender, wm, property, value);
 	}
 
 	public static boolean update(CommandSender sender) {
@@ -210,8 +124,13 @@ public class CommandHandler {
 	}
 	
 	public static List<String> getWorldsTimeHandler() {
-		List<String> list = new ArrayList<String>(((LinkedHashMap<String, Object>)((MemorySection) TimeHandler.config.get("configWorld")).getValues(false)).keySet()); 
-		Collections.sort(list);
+		List<String> list = new ArrayList<String>();
+		try {
+			list.addAll(((LinkedHashMap<String, Object>)((MemorySection) TimeHandler.config.get("configWorld")).getValues(false)).keySet());			
+			Collections.sort(list);
+		} catch (Exception e) {
+			// nothing
+		}
 		return list;
 	}
 	
