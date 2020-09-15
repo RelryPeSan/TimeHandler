@@ -24,12 +24,6 @@ public class WeatherManager {
 		world.setStorm(true);
 		world.setThundering(false);
 		TimeHandler.sendMessage(sender, "Clima definido para: " + getClimaAtual(world));
-//		if(sender instanceof Player) {
-//			Player p = (Player) sender;
-//		} else {
-//			
-//		}
-//		world.setWeatherDuration(Integer.MAX_VALUE);
 		
 		return true;
 	}
@@ -49,12 +43,6 @@ public class WeatherManager {
 		world.setStorm(true);
 		world.setThundering(true);
 		TimeHandler.sendMessage(sender, "Clima definido para: " + getClimaAtual(world));
-//		if(sender instanceof Player) {
-//			Player p = (Player) sender;
-//		} else {
-//			
-//		}
-//		world.setWeatherDuration(Integer.MAX_VALUE);
 		
 		return true;
 	}
@@ -71,10 +59,6 @@ public class WeatherManager {
 	}
 
 	public static boolean calm(CommandSender sender, World world) {
-//		if(sender instanceof Player) {
-//			Player p = (Player) sender;
-//			p.setPlayerWeather(WeatherType.CLEAR);
-//		}
 		world.setStorm(false);
 		world.setThundering(false);
 		TimeHandler.sendMessage(sender, "Clima definido para: " + getClimaAtual(world));
@@ -83,7 +67,7 @@ public class WeatherManager {
 	}
 	
 	public static String getClimaAtual(World world) {
-		return (world.isThundering() ? ChatColor.YELLOW + "Thundering" : 
-    		(world.hasStorm() ? ChatColor.BLUE + "Storm" : ChatColor.WHITE + "Clean")) + ChatColor.RESET;
+		return (world.hasStorm() ? (world.isThundering() ? ChatColor.YELLOW + "Thundering" : ChatColor.BLUE + "Storm" ) : 
+			ChatColor.WHITE + "Clean") + ChatColor.RESET;
 	}
 }

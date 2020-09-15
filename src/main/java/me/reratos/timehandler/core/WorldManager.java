@@ -1,5 +1,6 @@
 package me.reratos.timehandler.core;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import me.reratos.timehandler.enums.ThunderEnum;
@@ -8,6 +9,7 @@ import me.reratos.timehandler.enums.WeatherEnum;
 
 public class WorldManager implements Runnable {
 	
+	private String nameWorld;
 	private World world;
 	
 	private boolean enabled;
@@ -16,9 +18,10 @@ public class WorldManager implements Runnable {
 	private TimeEnum time;
 	private int timeFixed;
 	
-	public WorldManager(World world) {
+	public WorldManager(String nameWorld) {
 		super();
-		this.world = world;
+		this.setNameWorld(nameWorld);
+		this.world = Bukkit.getWorld(nameWorld);
 	}
 
 	public boolean isEnabled() {
@@ -61,6 +64,14 @@ public class WorldManager implements Runnable {
 		this.timeFixed = timeFixed;
 	}
 
+	public String getNameWorld() {
+		return nameWorld;
+	}
+
+	public void setNameWorld(String nameWorld) {
+		this.nameWorld = nameWorld;
+	}
+
 	public World getWorld() {
 		return world;
 	}
@@ -68,8 +79,12 @@ public class WorldManager implements Runnable {
 	@Override
 	public void run() {
 		if(!enabled) return;
+		if(world == null) {
+			world = Bukkit.getWorld(nameWorld);
+			if(world == null) return;
+		}
 		
-		if(time == TimeEnum.DAY && world.getTime() > 11500) {
+		if(time == TimeEnum.DAY && (world.getTime() < 500 || world.getTime() > 11500)) {
 			world.setTime(500);
 		} else if(time == TimeEnum.NIGHT && (world.getTime() < 14000 || world.getTime() > 22000)) {
 			world.setTime(14000);

@@ -1,5 +1,5 @@
 name: TimeHandler
-version: 1.1.1-beta
+version: 1.1.2-beta
 main: me.reratos.timehandler.TimeHandler
 author: Relry
 database: false
@@ -21,7 +21,7 @@ commands:
         permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler info [world]
     "timehandler help":
-        description: Comando para listar os camandos do plugin timehandler.
+        description: Comando para listar os comandos do plugin timehandler.
         aliases: ["th help"]
         permission: timehandler.help.use
         permission-message: Você não tem permissão para usar este comando.
@@ -45,7 +45,7 @@ commands:
         permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler set <world> [<property> <value>]
     "timehandler update":
-        description: Comando para listar os mundos configurados no timehandler.
+        description: Comando para verificar atualização disponivel para o plugin.
         aliases: ["th update"]
         permission: timehandler.update.use
         permission-message: Você não tem permissão para usar este comando.

@@ -1,6 +1,5 @@
 package me.reratos.timehandler.handler.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -45,12 +44,12 @@ public class SetCommand {
 		
 		TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Configuração padrão criada para o mundo: " + 
 				ChatColor.GREEN + worldName);
-		TimeManager.initTask(Bukkit.getWorld(worldName));
+		TimeManager.initTask(worldName);
 		return true;
 	}
 	
 	public static boolean commandSetBase(CommandSender sender, WorldManager worldManager, String property, String value) {
-		String worldName = worldManager.getWorld().getName();
+		boolean ret = false;
 		
 //		weather: default/rain/calm
 //		thunder: default/none/always
@@ -58,92 +57,122 @@ public class SetCommand {
 //		timeFixed: 	 0 - 24000
 		switch (property) {
 			case enabled:
-				switch (value) {
-				case "true":
-				case "false":
-					TimeHandler.config.set("configWorld." + worldName + "." + property, Boolean.parseBoolean(value));
-					worldManager.setEnabled(Boolean.parseBoolean(value));
-					break;
-				default:
-					TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-							"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido.");
-					return false;
-				}
-			break;
+				ret = commandSetEnabled(sender, worldManager, property, value);
+				break;
 			
 			case weather:
-				switch (value) {
-					case optionDefault:
-					case optionRain:
-					case optionCalm:
-						TimeHandler.config.set("configWorld." + worldName + "." + property, value);
-						worldManager.setWeather(WeatherEnum.getEnumPorValue(value));
-						break;
-					default:
-						TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-								"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido.");
-						return false;
-				}
+				ret = commandSetWeather(sender, worldManager, property, value);
 				break;
 				
 			case thunder:
-				switch (value) {
-					case optionDefault:
-					case optionNone:
-					case optionAlways:
-						TimeHandler.config.set("configWorld." + worldName + "." + property, value);
-						worldManager.setThunder(ThunderEnum.getEnumPorValue(value));
-						break;
-					default:
-						TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-								"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido.");
-						return false;
-				}
+				ret = commandSetThunder(sender, worldManager, property, value);
 				break;
 				
 			case time:
-				switch (value) {
-					case optionDefault:
-					case optionDay:
-					case optionNight:
-					case optionFixed:
-						TimeHandler.config.set("configWorld." + worldName + "." + property, value);
-						worldManager.setTime(TimeEnum.getEnumPorValue(value));
-						break;
-					default:
-						TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-								"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido.");
-						return false;
-				}
+				ret = commandSetTime(sender, worldManager, property, value);
 				break;
 				
 			case timeFixed:
-				try {
-					int tempo = Integer.parseInt(value);
-					if(tempo >= 0 && tempo <= 24000) {
-						TimeHandler.config.set("configWorld." + worldName + "." + property, tempo);
-						worldManager.setTimeFixed(tempo);
-					} else {
-						throw new NumberFormatException();
-					}
-					
-				} catch (NumberFormatException e) {
-					TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + 
-							ChatColor.RESET + "' não é um tempo válido(0 - 24000) para a propriedade " + 
-							ChatColor.AQUA + property + ChatColor.RESET + "");
-					return false;
-				}
+				ret = commandSetTimeFixed(sender, worldManager, property, value);
 				break;
 	
 			default:
 				return false;
 		}
 
-		TimeHandler.sendMessage(sender, "Alterado a propriedade '" + ChatColor.AQUA + property + ChatColor.RESET + 
-				"' para o valor: '" + ChatColor.LIGHT_PURPLE + value + ChatColor.RESET + "'");
-		TimeHandler.plugin.saveConfig();
+		if(ret) {
+			TimeHandler.sendMessage(sender, "Alterado a propriedade '" + ChatColor.AQUA + property + ChatColor.RESET + 
+					"' para o valor: '" + ChatColor.LIGHT_PURPLE + value + ChatColor.RESET + "'");
+			TimeHandler.plugin.saveConfig();
+		}
 		
-		return true;
+		return ret;
 	}
 	
+	public static boolean commandSetTime(CommandSender sender, WorldManager worldManager, String property, String value) {
+		switch (value) {
+			case optionDefault:
+			case optionDay:
+			case optionNight:
+			case optionFixed:
+				configSetValue(worldManager, property, value);
+				worldManager.setTime(TimeEnum.getEnumPorValue(value));
+				return true;
+			default:
+				messageValorInvalido(sender, property, value);
+				return false;
+		}
+	}
+	
+	public static boolean commandSetTimeFixed(CommandSender sender, WorldManager worldManager, String property, String value) {
+		try {
+			int tempo = Integer.parseInt(value);
+			if(tempo >= 0 && tempo <= 24000) {
+				configSetValue(worldManager, property, Integer.parseInt(value));
+				worldManager.setTimeFixed(tempo);
+			} else {
+				throw new NumberFormatException();
+			}
+			return true;
+			
+		} catch (NumberFormatException e) {
+			messageValorInvalido(sender, property, value, "(0 - 24000)");
+			return false;
+		}
+	}
+	
+	public static boolean commandSetThunder(CommandSender sender, WorldManager worldManager, String property, String value) {
+		switch (value) {
+			case optionDefault:
+			case optionNone:
+			case optionAlways:
+				configSetValue(worldManager, property, value);
+				worldManager.setThunder(ThunderEnum.getEnumPorValue(value));
+				return true;
+			default:
+				messageValorInvalido(sender, property, value);
+				return false;
+		}
+	}
+	
+	public static boolean commandSetWeather(CommandSender sender, WorldManager worldManager, String property, String value) {
+		switch (value) {
+			case optionDefault:
+			case optionRain:
+			case optionCalm:
+				configSetValue(worldManager, property, value);
+				worldManager.setWeather(WeatherEnum.getEnumPorValue(value));
+				return true;
+			default:
+				messageValorInvalido(sender, property, value);
+				return false;
+		}
+	}
+	
+	public static boolean commandSetEnabled(CommandSender sender, WorldManager worldManager, String property, String value) {
+		switch (value) {
+			case "true":
+			case "false":
+				configSetValue(worldManager, property, Boolean.parseBoolean(value));
+				worldManager.setEnabled(Boolean.parseBoolean(value));
+				return true;
+			default:
+				messageValorInvalido(sender, property, value);
+				return false;
+		}
+	}
+
+	private static void messageValorInvalido(CommandSender sender, String property, String value) {
+		messageValorInvalido(sender, property, value, "");
+	}
+	
+	private static void messageValorInvalido(CommandSender sender, String property, String value, String sufix) {
+		TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
+				"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido. " + 
+				ChatColor.YELLOW + sufix + ChatColor.RESET);
+	}
+	
+	private static void configSetValue(WorldManager worldManager, String property, Object value) {
+		TimeHandler.config.set("configWorld." + worldManager.getWorld().getName() + "." + property, value);
+	}
 }

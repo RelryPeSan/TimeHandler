@@ -2,7 +2,6 @@ package me.reratos.timehandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,6 +29,7 @@ public class TimeHandler extends JavaPlugin {
     	plugin = this;
 
     	CommandHandler.update(resourceId);
+    	lastVersionPlugin();
     	
     	Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 
@@ -37,16 +37,13 @@ public class TimeHandler extends JavaPlugin {
     	getCommand("timehandler").setTabCompleter(tabCompletion);
     	getCommand("th").setTabCompleter(tabCompletion);
     	
-        sendMessage(ChatColor.AQUA + "Manipulador de Tempo está ativo.");
+        sendMessage(ChatColor.AQUA + "Time Handler is active.");
         
         saveDefaultConfig();
         saveConfig();
         config = getConfig();
     	
-    	lastVersionPlugin();
-    	
     	initializeTasks();
-    	
     }
     
     private void lastVersionPlugin() {
@@ -54,9 +51,9 @@ public class TimeHandler extends JavaPlugin {
 			if(!plugin.getDescription().getVersion().equals(version)) {
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					if(p.isOp()) {
-						sendMessage(p, "Nova atualização do Time Handler disponivel.");
-						sendMessage(p, "Versão atual...: " + plugin.getDescription().getVersion());
-						sendMessage(p, "Ultima versão..: " + version);
+						sendMessage(p, "New update available.");
+						sendMessage(p, "Current version: " + plugin.getDescription().getVersion());
+						sendMessage(p, "Last version: \t" + version);
 					}
 				}
 			}
@@ -73,19 +70,21 @@ public class TimeHandler extends JavaPlugin {
             case "th":
                 if(sender.hasPermission("timehandler.use")){
                 	
-//                    for(int i = 0; i < args.length; i++) {
-//                    	sendMessage(ChatColor.GREEN + "args[" + i + "]: " + ChatColor.YELLOW + args[i]);
-//                    }
-                    
                     if(args.length == 0) {
                     	sendMessage(sender, "Utilize o comando: '/help th' para mais ajuda.");
                     	return false;
                     }
                     
                     switch (args[0].toLowerCase()) {
-//	                    case "help":
+	                    case "help":
+	                    	if(args.length == 1) {
+	                    		sendHeaderMessage(sender, args[0].toUpperCase());
+	                    		return CommandHandler.help(sender);
+	                    	}
 //	                    	TimeHandler.sendMessage(sender, "Help em desenvolvimento!");
-//	                    	return false;
+	                    	command.setUsage(Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
+	                    	sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
+	                    	return false;
                     
 						case "info":
 							if(args.length != 2) {
@@ -102,6 +101,7 @@ public class TimeHandler extends JavaPlugin {
 								sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
 		                    	return false;
 							}
+							sendHeaderMessage(sender, args[0].toUpperCase());
 							return CommandHandler.list(sender);
 
 //						case "remove":
@@ -132,7 +132,7 @@ public class TimeHandler extends JavaPlugin {
 					}
                     
                 } else {
-                    sendMessage(sender, "Você não tem permissão para executar este comando.");
+                    sendMessage(sender, "VocÃª nÃ£o tem permissÃ£o para executar este comando.");
                 }
                 break;
 
@@ -194,7 +194,7 @@ public class TimeHandler extends JavaPlugin {
     	HandlerList.unregisterAll(plugin);
     	saveConfig();
     	
-    	// finaliza as task de verificação de clima dos mundos
+    	// finaliza as task de verificaÃ§Ã£o de clima dos mundos
     	Bukkit.getScheduler().cancelTasks(this);
     	TimeManager.finalizeTask();
     	
@@ -218,8 +218,8 @@ public class TimeHandler extends JavaPlugin {
     }
 
     public static void sendHeaderMessage(CommandSender sender, String message) {
-    	sender.sendMessage(ChatColor.YELLOW + "        ---============ " + ChatColor.GREEN + message + 
-    			ChatColor.YELLOW + " ============---");
+    	sendMessage(sender, ChatColor.YELLOW + "---========== " + ChatColor.GREEN + message + 
+    			ChatColor.YELLOW + " ==========---");
     }
     
     public static void broadcastMessage(String message) {
@@ -227,12 +227,12 @@ public class TimeHandler extends JavaPlugin {
     }
     
     private static void initializeTasks() {
-    	for(String nameWorld: CommandHandler.getWorldsTimeHandler()) {
-    		World w = Bukkit.getWorld(nameWorld);
-    		
-    		if(w != null) {
-    			TimeManager.initTask(w);
-    		}
+    	for(String worldName: CommandHandler.getWorldsTimeHandler()) {
+//    		World w = Bukkit.getWorld(nameWorld);
+//    		if(w != null) {
+//    			TimeManager.initTask(w);
+//    		}
+    		TimeManager.initTask(worldName);
     	}
     }
 			

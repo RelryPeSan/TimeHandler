@@ -38,7 +38,9 @@ public class CommandCompleter implements TabCompleter{
 			} else {
 				switch (params[0].toLowerCase()) {
 				case "info":
-					StringUtil.copyPartialMatches(params[1], CommandHandler.getWorldsTimeHandler(), completions);
+					if(params.length == 2) {
+						StringUtil.copyPartialMatches(params[1], CommandHandler.getWorldsTimeHandler(), completions);
+					}
 					break;
 					
 				case "set":

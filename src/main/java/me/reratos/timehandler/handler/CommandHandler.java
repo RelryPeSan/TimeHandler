@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.entity.Player;
 
 import me.reratos.timehandler.TimeHandler;
 import me.reratos.timehandler.WorldConfig;
@@ -24,6 +25,7 @@ import me.reratos.timehandler.utils.UpdateChecker;
 public class CommandHandler {
 	
 	public static boolean info(CommandSender sender, String worldName) {
+		// verifica existencia do mundo
 		World world = Bukkit.getWorld(worldName);
         if(world == null) {
         	return false;
@@ -34,7 +36,12 @@ public class CommandHandler {
         if(worldConfig == null) {
         	TimeHandler.sendMessage(sender, "Este mundo ainda NÃO foi adicionado no manipulador.");
         } else {
-        	TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Mundo: " + ChatColor.GREEN + worldName);
+        	WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
+        	String status = ChatColor.RESET + "[" + (wm.getWorld() == null ? ChatColor.RED + "RUNNING ERROR" : (
+        			wm.isEnabled() ? ChatColor.GREEN + "RUNNING" : ChatColor.RED + "OFF")) +
+        			ChatColor.RESET + "]";
+        	TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Mundo: " + ChatColor.GREEN + worldName + 
+        			ChatColor.RESET +" - " + status);
         	TimeHandler.sendMessage(sender, "Tempo atual: " + world.getTime() + ", FullTime: " + world.getFullTime());
         	long days = world.getFullTime() / 24000;
         	int phase = (int) (days % 8);
@@ -43,7 +50,7 @@ public class CommandHandler {
         	LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldConfig.getValues(true);
 
         	String climaAtual = WeatherManager.getClimaAtual(world);
-        	TimeHandler.sendMessage(sender, "Clima atual: " + climaAtual + ", Clima mudará em: " + world.getWeatherDuration());
+        	TimeHandler.sendMessage(sender, "Clima atual: " + climaAtual);
         	
         	// Lista as informações de ambiente do mundo
         	WorldConfig.info(sender, list);
@@ -53,25 +60,66 @@ public class CommandHandler {
 	}
 	
 	public static boolean help(CommandSender sender) {
-		HelpCommand.helpAll(sender);
-		return true;
+		return HelpCommand.helpAll(sender);
 	}
 	
 	public static boolean list(CommandSender sender) {
-		MemorySection worlds = (MemorySection) TimeHandler.config.get("configWorld");
+		MemorySection worldsMS = (MemorySection) TimeHandler.config.get("configWorld");
 
 		
-		if(worlds == null) {
+		if(worldsMS == null) {
 			TimeHandler.sendMessage(sender, "Nenhum mundo foi configurado no plugin TimeHandler.");
 		} else {
-			LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) worlds.getValues(false);
+			LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) worldsMS.getValues(false);
 			List<String> lista = new ArrayList<>(map.keySet());
 			
 			Collections.sort(lista);
 			
 			TimeHandler.sendMessage(sender, "Lista de mundos configurados.");
-			for(String w : lista) {
-				TimeHandler.sendMessage(sender, ChatColor.YELLOW + " - " + w);
+			for(String worldName : lista) {
+				WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
+				World world = wm != null ? wm.getWorld() : null;
+				StringBuilder message = new StringBuilder();
+				message.append(ChatColor.YELLOW);
+				message.append(" - ");
+				message.append(worldName);
+				
+				if(sender instanceof Player) {
+					message.append(ChatColor.RESET);
+					message.append(" - ");
+				} else {
+					message.append("\t\t");
+				}
+				
+				message.append(ChatColor.RESET);
+				message.append("[");
+				if(wm != null) {
+					if(wm.isEnabled()) {
+						message.append(ChatColor.GREEN);
+						message.append("RUNNING");
+					} else {
+						message.append(ChatColor.RED);
+						message.append("OFF");
+					}
+				} else {
+					message.append(ChatColor.RED);
+					message.append("NOT RUNNING");
+				}
+				message.append(ChatColor.RESET);
+				message.append(", ");
+				
+				if(world != null) {
+					message.append(ChatColor.GREEN);
+					message.append("LOADED");
+				} else {
+					message.append(ChatColor.RED);
+					message.append("UNLOADED");
+				}
+				message.append(ChatColor.RESET);
+				message.append("]");
+				
+				TimeHandler.sendMessage(sender, message.toString());
+//				TimeHandler.sendMessage(sender, ChatColor.YELLOW + " - " + worldName);
 			}
 		}
 		
@@ -129,9 +177,9 @@ public class CommandHandler {
         new UpdateChecker(TimeHandler.plugin, resourceId).getVersionConsumer(version -> {
 //        	TimeHandler.sendMessage(sender, "version: " + version + ", server: " + TimeHandler.plugin.getDescription().getVersion());
         	if (TimeHandler.plugin.getDescription().getVersion().equalsIgnoreCase(version)) {
-    			TimeHandler.sendMessage(sender, "O plugin está atualizado. " + ChatColor.LIGHT_PURPLE + version);
+    			TimeHandler.sendMessage(sender, "The plugin is updated. " + ChatColor.LIGHT_PURPLE + version);
             } else {
-    			TimeHandler.sendMessage(sender, "Existe uma nova versão disponivel: " + ChatColor.GREEN + version);
+    			TimeHandler.sendMessage(sender, "There is a new version available: " + ChatColor.GREEN + version);
             }
         });
 		return true;
@@ -142,9 +190,6 @@ public class CommandHandler {
 		try {
 			list.addAll(((LinkedHashMap<String, Object>)((MemorySection) TimeHandler.config.get("configWorld")).getValues(false)).keySet());			
 			Collections.sort(list);
-//			for(String s : list) {
-//				s = ChatColor.LIGHT_PURPLE + s + ChatColor.RESET;
-//			}
 		} catch (Exception e) {
 			// nothing
 		}

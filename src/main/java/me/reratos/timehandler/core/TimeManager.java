@@ -78,12 +78,12 @@ public class TimeManager {
 		}
 	}
 	
-	public static void initTask(World world) {
-		WorldManager wm = runnablesWorld.get(world.getName());
+	public static void initTask(String worldName) {
+		WorldManager wm = runnablesWorld.get(worldName);
 		
 		if(wm == null) {
-			wm = new WorldManager(world);
-			runnablesWorld.put(world.getName(), wm);
+			wm = new WorldManager(worldName);
+			runnablesWorld.put(worldName, wm);
 			
 			Bukkit.getScheduler()
 				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 6 * 20);
@@ -92,7 +92,7 @@ public class TimeManager {
 			return;
 		}
 		
-		MemorySection worldConfig = (MemorySection) TimeHandler.config.get("configWorld." + world.getName());
+		MemorySection worldConfig = (MemorySection) TimeHandler.config.get("configWorld." + worldName);
 		LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldConfig.getValues(true);
 
 		Object objAux;
