@@ -28,6 +28,8 @@ public class TimeHandler extends JavaPlugin {
     @Override
     public void onEnable() {
     	plugin = this;
+
+    	CommandHandler.update(resourceId);
     	
     	Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 
@@ -40,8 +42,6 @@ public class TimeHandler extends JavaPlugin {
         saveDefaultConfig();
         saveConfig();
         config = getConfig();
-        
-    	CommandHandler.update(resourceId);
     	
     	lastVersionPlugin();
     	
@@ -132,7 +132,7 @@ public class TimeHandler extends JavaPlugin {
 					}
                     
                 } else {
-                    sendMessage(sender, config.getString(Config.STR_NOT_PERMISSION_COMMAND));
+                    sendMessage(sender, "Você não tem permissão para executar este comando.");
                 }
                 break;
 
@@ -218,7 +218,7 @@ public class TimeHandler extends JavaPlugin {
     }
 
     public static void sendHeaderMessage(CommandSender sender, String message) {
-    	sender.sendMessage(ChatColor.YELLOW + "/t---============ " + ChatColor.GREEN + message + 
+    	sender.sendMessage(ChatColor.YELLOW + "        ---============ " + ChatColor.GREEN + message + 
     			ChatColor.YELLOW + " ============---");
     }
     

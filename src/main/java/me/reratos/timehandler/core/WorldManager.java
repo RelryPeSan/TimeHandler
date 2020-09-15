@@ -74,7 +74,10 @@ public class WorldManager implements Runnable {
 		} else if(time == TimeEnum.NIGHT && (world.getTime() < 14000 || world.getTime() > 22000)) {
 			world.setTime(14000);
 		} else if(time == TimeEnum.FIXED) {
-			world.setTime(timeFixed);
+			long fullTime = world.getFullTime();
+			long hoursDay = fullTime % 24000;
+			long timeSet = (fullTime - hoursDay) + timeFixed;
+			world.setFullTime(timeSet);
 		}
 		
 		if(weather == WeatherEnum.CALM) {
