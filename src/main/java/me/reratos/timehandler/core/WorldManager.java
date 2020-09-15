@@ -71,8 +71,8 @@ public class WorldManager implements Runnable {
 		
 		if(time == TimeEnum.DAY && world.getTime() > 11500) {
 			world.setTime(500);
-		} else if(time == TimeEnum.NIGHT && world.getTime() < 12500) {
-			world.setTime(12500);
+		} else if(time == TimeEnum.NIGHT && (world.getTime() < 14000 || world.getTime() > 22000)) {
+			world.setTime(14000);
 		} else if(time == TimeEnum.FIXED) {
 			world.setTime(timeFixed);
 		}

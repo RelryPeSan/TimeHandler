@@ -55,7 +55,7 @@ public class SetCommand {
 //		weather: default/rain/calm
 //		thunder: default/none/always
 //		time: 	 default/day/night/fixed
-//		timeFixed: 	 0 - 23999
+//		timeFixed: 	 0 - 24000
 		switch (property) {
 			case enabled:
 				switch (value) {
@@ -120,7 +120,7 @@ public class SetCommand {
 			case timeFixed:
 				try {
 					int tempo = Integer.parseInt(value);
-					if(tempo >= 0 && tempo < 24000) {
+					if(tempo >= 0 && tempo <= 24000) {
 						TimeHandler.config.set("configWorld." + worldName + "." + property, tempo);
 						worldManager.setTimeFixed(tempo);
 					} else {
@@ -129,7 +129,7 @@ public class SetCommand {
 					
 				} catch (NumberFormatException e) {
 					TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + 
-							ChatColor.RESET + "' não é um tempo válido(0 - 23999) para a propriedade " + 
+							ChatColor.RESET + "' não é um tempo válido(0 - 24000) para a propriedade " + 
 							ChatColor.AQUA + property + ChatColor.RESET + "");
 					return false;
 				}

@@ -86,7 +86,7 @@ public class TimeManager {
 			runnablesWorld.put(world.getName(), wm);
 			
 			Bukkit.getScheduler()
-				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 5 * 20, 10 * 20);
+				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 6 * 20);
 		} else {
 			TimeHandler.sendMessage("Este mundo já possui uma instancia de gerenciamento aberta.");
 			return;
@@ -127,6 +127,10 @@ public class TimeManager {
 		} catch (Exception e) {
 			wm.setWeather(WeatherEnum.DEFAULT);
 		}
+	}
+	
+	public static void finalizeTask() {
+		runnablesWorld = new LinkedHashMap<String, WorldManager>();
 	}
 	
 	public static Map<String, WorldManager> getRunablesWorld() {

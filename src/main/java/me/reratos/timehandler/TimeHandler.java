@@ -2,57 +2,36 @@ package me.reratos.timehandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.Yaml;
 
 import me.reratos.timehandler.core.TimeManager;
 import me.reratos.timehandler.core.WeatherManager;
 import me.reratos.timehandler.events.WorldListener;
+import me.reratos.timehandler.handler.CommandCompleter;
 import me.reratos.timehandler.handler.CommandHandler;
-import me.reratos.timehandler.handler.TabCompletion;
+import me.reratos.timehandler.utils.UpdateChecker;
 
 public class TimeHandler extends JavaPlugin {
 
 	public static TimeHandler plugin;
 	public static FileConfiguration config;
-	public static Yaml configPlugin;
+	public static YamlConfiguration configWorlds;
+	static String resourceId = "83803";
 
     @Override
     public void onEnable() {
     	plugin = this;
-//    	try {
-//
-//    	    DumperOptions options = new DumperOptions();
-//    	    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-//    	    configPlugin = new Yaml(options);
-//    	    
-//    	    FileWriter arq = new FileWriter("plugins/TimeHandler/configWorlds.yml");
-////			configPlugin.load((new FileInputStream(arq)));
-//
-//			Map<String, Map<String, String>> arqYml = (Map<String, Map<String, String>>) new HashMap<String, Map<String, String>>();
-//			Map<String, String> worlds = (Map<String, String>) new HashMap<String, String>();
-//
-//			worlds.put("world", "NORMAL");
-//			worlds.put("void", "NORMAL");
-//			worlds.put("world_nether", "NETHER");
-//			arqYml.put("mundos", worlds);
-//
-////			String ret = configPlugin.dump(arqYml);
-//			configPlugin.dump(arqYml, arq);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
     	
     	Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 
-    	TabCompletion tabCompletion = new TabCompletion();
+    	CommandCompleter tabCompletion = new CommandCompleter();
     	getCommand("timehandler").setTabCompleter(tabCompletion);
     	getCommand("th").setTabCompleter(tabCompletion);
     	
@@ -62,21 +41,34 @@ public class TimeHandler extends JavaPlugin {
         saveConfig();
         config = getConfig();
         
-    	for(Player p : Bukkit.getOnlinePlayers()) {
-    		if(p.isOp()) {
-    			p.setGameMode(GameMode.CREATIVE);
-    			TimeHandler.sendMessage(p, "Operador: alterado gamemode para criativo");
-    		}
-    	}
+    	CommandHandler.update(resourceId);
+    	
+    	lastVersionPlugin();
     	
     	initializeTasks();
     	
     }
     
-    @Override
+    private void lastVersionPlugin() {
+		new UpdateChecker(plugin, resourceId).getVersionConsumer(version -> {
+			if(!plugin.getDescription().getVersion().equals(version)) {
+				for(Player p : Bukkit.getOnlinePlayers()) {
+					if(p.isOp()) {
+						sendMessage(p, "Nova atualização do Time Handler disponivel.");
+						sendMessage(p, "Versão atual...: " + plugin.getDescription().getVersion());
+						sendMessage(p, "Ultima versão..: " + version);
+					}
+				}
+			}
+		});
+	}
+
+	@Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
-        switch(command.getName()) {
+    	
+    	sender.sendMessage("");
+    	
+    	switch(command.getName()) {
             case "timehandler":
             case "th":
                 if(sender.hasPermission("timehandler.use")){
@@ -91,26 +83,34 @@ public class TimeHandler extends JavaPlugin {
                     }
                     
                     switch (args[0].toLowerCase()) {
+//	                    case "help":
+//	                    	TimeHandler.sendMessage(sender, "Help em desenvolvimento!");
+//	                    	return false;
+                    
 						case "info":
 							if(args.length != 2) {
-		                    	sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
+								command.setUsage(Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
+								sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
 		                    	return false;
 		                    }
+							sendHeaderMessage(sender, args[0].toUpperCase());
 							return CommandHandler.info(sender, args[1]);
 							
 						case "list":
 							if(args.length != 1) {
+								command.setUsage(Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
 								sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
 		                    	return false;
 							}
 							return CommandHandler.list(sender);
 
-						case "remove":
-							if(args.length != 2) {
-								sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
-		                    	return false;
-							}
-							return CommandHandler.remove(sender, args[1]);
+//						case "remove":
+//							if(args.length != 2) {
+////								command.setUsage(Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
+//								sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
+//		                    	return false;
+//							}
+//							return CommandHandler.remove(sender, args[1]);
 
 						case "set":
 							if(args.length == 2) {
@@ -118,15 +118,17 @@ public class TimeHandler extends JavaPlugin {
 		                    } else if(args.length == 4) {
 		                    	return CommandHandler.set(sender, args[1], args[2], args[3]);
 		                    }
+							command.setUsage(Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
 							sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
 	                    	return false;
 	                    	
 						case "update":
-							return CommandHandler.update(sender);
+							return CommandHandler.update(sender, resourceId);
 	
 						default:
+//							command.setUsage(Bukkit.getPluginCommand(command.getName()).getUsage());
 							sendMessage(sender, "Utilize o comando: '/help th' para mais ajuda.");
-							return false;
+							return true;
 					}
                     
                 } else {
@@ -180,7 +182,7 @@ public class TimeHandler extends JavaPlugin {
             	} else if(args.length == 1) {
             		return WeatherManager.calm(sender, args[0]);
             	}
-            	sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' ppara mais ajuda.");
+            	sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
             	break;
         }
         
@@ -190,12 +192,16 @@ public class TimeHandler extends JavaPlugin {
     @Override
     public void onDisable() {
     	HandlerList.unregisterAll(plugin);
-    	sendMessage(ChatColor.YELLOW + "Desabilitado");
     	saveConfig();
+    	
+    	// finaliza as task de verificação de clima dos mundos
+    	Bukkit.getScheduler().cancelTasks(this);
+    	TimeManager.finalizeTask();
     	
     	plugin = null;
     	config = null;
-    	configPlugin = null;
+    	configWorlds = null;
+    	sendMessage(ChatColor.YELLOW + "Desabilitado");
     }
     
     public static boolean existWorld(String worldName) {
@@ -209,6 +215,11 @@ public class TimeHandler extends JavaPlugin {
 
     public static void sendMessage(CommandSender sender, String message) {
     	sender.sendMessage(ChatColor.GOLD + "[TimeHandler] " + ChatColor.RESET + message);
+    }
+
+    public static void sendHeaderMessage(CommandSender sender, String message) {
+    	sender.sendMessage(ChatColor.YELLOW + "/t---============ " + ChatColor.GREEN + message + 
+    			ChatColor.YELLOW + " ============---");
     }
     
     public static void broadcastMessage(String message) {

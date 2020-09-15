@@ -1,5 +1,5 @@
 name: TimeHandler
-version: 1.0.0-beta
+version: 1.1.0-beta
 main: me.reratos.timehandler.TimeHandler
 author: Relry
 database: false
@@ -13,7 +13,7 @@ commands:
         aliases: [th]
         permission: timehandler.use
         permission-message: Você não tem permissão para usar este comando.
-        usage: /timehandler <action> [world]
+        usage: /timehandler <action>
     "timehandler info":
         description: Comando para verificar a configuração do mundo no timehandler.
         aliases: ["th info"]
@@ -32,18 +32,24 @@ commands:
         permission: timehandler.list.use
         permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler list
-    "timehandler remove":
-        description: Comando para remover configuração do mundo no timehandler.
-        aliases: ["th remove"]
-        permission: timehandler.remove.use
-        permission-message: Você não tem permissão para usar este comando.
-        usage: /timehandler remove [world]
+#    "timehandler remove":
+#        description: Comando para remover configuração do mundo no timehandler.
+#        aliases: ["th remove"]
+#        permission: timehandler.remove.use
+#        permission-message: Você não tem permissão para usar este comando.
+#        usage: /timehandler remove [world]
     "timehandler set":
         description: Comando para configurar mundo no timehandler.
         aliases: ["th set"]
         permission: timehandler.set.use
         permission-message: Você não tem permissão para usar este comando.
-        usage: /timehandler set [world] <property> <value>
+        usage: /timehandler set <world> [<property> <value>]
+    "timehandler update":
+        description: Comando para listar os mundos configurados no timehandler.
+        aliases: ["th update"]
+        permission: timehandler.update.use
+        permission-message: Você não tem permissão para usar este comando.
+        usage: /timehandler update
     day:
         description: Comando para definir tempo do mundo para 1000 ciclos(dia).
         aliases: [thd]
@@ -83,7 +89,8 @@ permissions:
             timehandler.info.use: true
             timehandler.help.use: true
             timehandler.list.use: true
-            timehandler.remove.use: true
+            timehandler.update.use: true
+#            timehandler.remove.use: true
             timehandler.set.use: true
             timehandler.time.use: true
             timehandler.weather.use: true
@@ -96,12 +103,15 @@ permissions:
     timehandler.list.use:
         description: Dá acesso para ver a lista dos mundos já configurados no plugin TimeHandler.
         default: op
+    timehandler.update.use:
+        description: Dá acesso para verificar atualizações no plugin TimeHandler.
+        default: op
     timehandler.set.use:
         description: Dá acesso para configurar mundo no plugin TimeHandler.
         default: op
-    timehandler.remove.use:
-        description: Dá acesso para remover configuração do mundo no plugin TimeHandler.
-        default: op
+#    timehandler.remove.use:
+#        description: Dá acesso para remover configuração do mundo no plugin TimeHandler.
+#        default: op
     timehandler.time.use:
         description: Dá acesso para mudar o tempo do mundo para dia ou noite.
         default: op
