@@ -50,7 +50,7 @@ public class CommandHandler {
         	LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldConfig.getValues(true);
 
         	String climaAtual = WeatherManager.getClimaAtual(world);
-        	TimeHandler.sendMessage(sender, "Clima atual: " + climaAtual);
+        	TimeHandler.sendMessage(sender, "Clima atual: " + climaAtual + ", clima mudará em: " + world.getWeatherDuration());
         	
         	// Lista as informações de ambiente do mundo
         	WorldConfig.info(sender, list);
