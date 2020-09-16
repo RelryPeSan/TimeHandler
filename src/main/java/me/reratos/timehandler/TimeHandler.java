@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.reratos.timehandler.core.TimeManager;
 import me.reratos.timehandler.core.WeatherManager;
+import me.reratos.timehandler.enums.MoonPhasesEnum;
 import me.reratos.timehandler.events.WorldListener;
 import me.reratos.timehandler.handler.CommandCompleter;
 import me.reratos.timehandler.handler.CommandHandler;
@@ -36,6 +37,7 @@ public class TimeHandler extends JavaPlugin {
     	CommandCompleter tabCompletion = new CommandCompleter();
     	getCommand("timehandler").setTabCompleter(tabCompletion);
     	getCommand("th").setTabCompleter(tabCompletion);
+    	getCommand("moonphase").setTabCompleter(tabCompletion);
     	
         sendMessage(ChatColor.AQUA + "Time Handler is active.");
         
@@ -53,7 +55,7 @@ public class TimeHandler extends JavaPlugin {
 					if(p.isOp()) {
 						sendMessage(p, "New update available.");
 						sendMessage(p, "Current version: " + plugin.getDescription().getVersion());
-						sendMessage(p, "Last version: \t" + version);
+						sendMessage(p, "Last version: " + ChatColor.BOLD + ChatColor.GREEN + version);
 					}
 				}
 			}
@@ -65,7 +67,7 @@ public class TimeHandler extends JavaPlugin {
     	
     	sender.sendMessage("");
     	
-    	switch(command.getName()) {
+    	switch(command.getName().toLowerCase()) {
             case "timehandler":
             case "th":
                 if(sender.hasPermission("timehandler.use")){
@@ -132,7 +134,7 @@ public class TimeHandler extends JavaPlugin {
 					}
                     
                 } else {
-                    sendMessage(sender, "Você não tem permissão para executar este comando.");
+                    sendMessage(sender, "You are not allowed to execute this command.");
                 }
                 break;
 
@@ -152,6 +154,16 @@ public class TimeHandler extends JavaPlugin {
             		return TimeManager.night(sender, ((Player)sender).getWorld());
             	} else if(args.length == 1) {
             		return TimeManager.night(sender, args[0]);
+            	}
+            	sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
+            	return false;
+            	
+            case "moonphase":
+            case "thmp":
+            	if(args.length == 1 && sender instanceof Player) {
+            		return TimeManager.moonPhase(sender, MoonPhasesEnum.getEnumPorValue(args[0]), ((Player)sender).getWorld());
+            	} else if(args.length == 2) {
+            		return TimeManager.moonPhase(sender, MoonPhasesEnum.getEnumPorValue(args[0]), args[1]);
             	}
             	sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
             	return false;
@@ -201,7 +213,7 @@ public class TimeHandler extends JavaPlugin {
     	plugin = null;
     	config = null;
     	configWorlds = null;
-    	sendMessage(ChatColor.YELLOW + "Desabilitado");
+    	sendMessage(ChatColor.YELLOW + "Disabled");
     }
     
     public static boolean existWorld(String worldName) {

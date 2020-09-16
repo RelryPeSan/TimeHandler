@@ -1,4 +1,4 @@
-package me.reratos.timehandler.handler.completer.enums;
+package me.reratos.timehandler.enums;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,6 +6,7 @@ import java.util.Set;
 
 public enum OptionsSetEnum {
 	ENABLED("enabled"),
+	MOON_PHASE("moonPhase"),
 	TIME("time"),
 	TIME_FIXED("timeFixed"),
 	THUNDER("thunder"),

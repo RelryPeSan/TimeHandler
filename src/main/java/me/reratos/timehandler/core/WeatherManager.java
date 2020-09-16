@@ -15,7 +15,7 @@ public class WeatherManager {
 		if(w != null) {
 			rain(sender, w);
 		} else {
-			TimeHandler.sendMessage(sender, "Este mundo não existe!");
+			TimeHandler.sendMessage(sender, "This world does not exist!");
 		}
 		return true;
 	}
@@ -23,7 +23,7 @@ public class WeatherManager {
 	public static boolean rain(CommandSender sender, World world) {
 		world.setStorm(true);
 		world.setThundering(false);
-		TimeHandler.sendMessage(sender, "Clima definido para: " + getClimaAtual(world));
+		TimeHandler.sendMessage(sender, "Weather set for: " + getClimaAtual(world));
 		
 		return true;
 	}
@@ -34,7 +34,7 @@ public class WeatherManager {
 		if(w != null) {
 			rain(sender, w);
 		} else {
-			TimeHandler.sendMessage(sender, "Este mundo não existe!");
+			TimeHandler.sendMessage(sender, "This world does not exist!");
 		}
 		return true;
 	}
@@ -42,7 +42,7 @@ public class WeatherManager {
 	public static boolean thundering(CommandSender sender, World world) {
 		world.setStorm(true);
 		world.setThundering(true);
-		TimeHandler.sendMessage(sender, "Clima definido para: " + getClimaAtual(world));
+		TimeHandler.sendMessage(sender, "Weather set for: " + getClimaAtual(world));
 		
 		return true;
 	}
@@ -53,7 +53,7 @@ public class WeatherManager {
 		if(w != null) {
 			calm(sender, w);
 		} else {
-			TimeHandler.sendMessage(sender, "Este mundo não existe!");
+			TimeHandler.sendMessage(sender, "This world does not exist!");
 		}
 		return true;
 	}
@@ -61,7 +61,7 @@ public class WeatherManager {
 	public static boolean calm(CommandSender sender, World world) {
 		world.setStorm(false);
 		world.setThundering(false);
-		TimeHandler.sendMessage(sender, "Clima definido para: " + getClimaAtual(world));
+		TimeHandler.sendMessage(sender, "Weather set for: " + getClimaAtual(world));
 		
 		return true;
 	}

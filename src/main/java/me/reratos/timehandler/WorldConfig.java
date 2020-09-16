@@ -16,6 +16,7 @@ public class WorldConfig {
 		sendMessage(sender, "thunder: " + getValue(list, "thunder"));
 		sendMessage(sender, "time: " + getValue(list, "time"));
 		sendMessage(sender, "timeFixed: " + getValue(list, "timeFixed"));
+		sendMessage(sender, "moonPhase: " + getValue(list, "moonPhase"));
 	}
 	
 	private static void sendMessage(CommandSender sender, String message) {

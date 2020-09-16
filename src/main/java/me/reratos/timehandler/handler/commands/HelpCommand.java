@@ -39,6 +39,8 @@ public class HelpCommand {
 			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.GREEN + " [world]");
 			cmd = TimeHandler.plugin.getCommand("night");
 			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			cmd = TimeHandler.plugin.getCommand("moonphase");
+			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.LIGHT_PURPLE + " <phase>" + ChatColor.GREEN + " [world]");
 		}
 
 		if(sender.hasPermission("timehandler.weather.use")) {
