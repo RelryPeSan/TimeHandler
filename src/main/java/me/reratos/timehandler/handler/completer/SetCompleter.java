@@ -5,12 +5,13 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.util.StringUtil;
 
+import me.reratos.timehandler.enums.EnabledEnum;
+import me.reratos.timehandler.enums.MoonPhasesEnum;
+import me.reratos.timehandler.enums.OptionsSetEnum;
+import me.reratos.timehandler.enums.ThunderEnum;
+import me.reratos.timehandler.enums.TimeEnum;
+import me.reratos.timehandler.enums.WeatherEnum;
 import me.reratos.timehandler.handler.CommandHandler;
-import me.reratos.timehandler.handler.completer.enums.OptionsSetEnum;
-import me.reratos.timehandler.handler.completer.enums.SetEnabledEnum;
-import me.reratos.timehandler.handler.completer.enums.SetThunderEnum;
-import me.reratos.timehandler.handler.completer.enums.SetTimeEnum;
-import me.reratos.timehandler.handler.completer.enums.SetWeatherEnum;
 
 public class SetCompleter {
 	
@@ -29,27 +30,32 @@ public class SetCompleter {
 			break;
 			
 		case 4:  // th set world property {VALUE}
-			if(OptionsSetEnum.getEnumPorValue(params[2].toLowerCase()) != null) {
-				switch (OptionsSetEnum.getEnumPorValue(params[2].toLowerCase())) {
+			if(OptionsSetEnum.getEnumPorValue(params[2]) != null) {
+				switch (OptionsSetEnum.getEnumPorValue(params[2])) {
 				case ENABLED:
-					StringUtil.copyPartialMatches(params[3], SetEnabledEnum.getList(), collection);
+					StringUtil.copyPartialMatches(params[3], EnabledEnum.getList(), collection);
 					break;
+					
+				case MOON_PHASE:
+					StringUtil.copyPartialMatches(params[3], MoonPhasesEnum.getList(), collection);
+					break;
+					
 				case TIME:
-					StringUtil.copyPartialMatches(params[3], SetTimeEnum.getList(), collection);
+					StringUtil.copyPartialMatches(params[3], TimeEnum.getList(), collection);
 					break;
 					
 				case TIME_FIXED:
-					for(int i = 0; i <= 24000; i++) {
-						collection.add(Integer.toString(i));
-					}
+//					for(int i = 0; i <= 24000; i += 2000) {
+//						collection.add(Integer.toString(i));
+//					}
 					break;
 					
 				case THUNDER:
-					StringUtil.copyPartialMatches(params[3], SetThunderEnum.getList(), collection);
+					StringUtil.copyPartialMatches(params[3], ThunderEnum.getList(), collection);
 					break;
 					
 				case WEATHER:
-					StringUtil.copyPartialMatches(params[3], SetWeatherEnum.getList(), collection);
+					StringUtil.copyPartialMatches(params[3], WeatherEnum.getList(), collection);
 					break;
 
 				default:

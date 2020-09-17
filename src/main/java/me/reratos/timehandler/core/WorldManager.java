@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 
+import me.reratos.timehandler.enums.MoonPhasesEnum;
 import me.reratos.timehandler.enums.ThunderEnum;
 import me.reratos.timehandler.enums.TimeEnum;
 import me.reratos.timehandler.enums.WeatherEnum;
@@ -18,6 +19,7 @@ public class WorldManager implements Runnable {
 	private ThunderEnum thunder;
 	private TimeEnum time;
 	private int timeFixed;
+	private MoonPhasesEnum moonPhase;
 	
 	public WorldManager(String nameWorld) {
 		super();
@@ -67,6 +69,14 @@ public class WorldManager implements Runnable {
 
 	public void setTimeFixed(int timeFixed) {
 		this.timeFixed = timeFixed;
+	}
+
+	public MoonPhasesEnum getMoonPhase() {
+		return moonPhase;
+	}
+
+	public void setMoonPhase(MoonPhasesEnum moonPhase) {
+		this.moonPhase = moonPhase;
 	}
 
 	public String getNameWorld() {
@@ -122,6 +132,18 @@ public class WorldManager implements Runnable {
 			world.setThundering(false);
 		} else if(thunder == ThunderEnum.ALWAYS) {
 			world.setThundering(true);
+		}
+		
+		if(moonPhase != MoonPhasesEnum.DEFAULT) {
+			long fullTime = world.getFullTime();
+			long days = fullTime / 24000;
+        	int currentPhase = (int) (days % 8);
+        	int targetPhase = moonPhase.ordinal();
+        	int timeSkip = (targetPhase < currentPhase ? (targetPhase + 8) - currentPhase : targetPhase - currentPhase);
+        	
+        	if(timeSkip != 0) {
+        		world.setFullTime(fullTime + (timeSkip * 24000));
+        	}
 		}
 	}
 	

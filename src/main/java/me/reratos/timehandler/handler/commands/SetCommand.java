@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import me.reratos.timehandler.TimeHandler;
 import me.reratos.timehandler.core.TimeManager;
 import me.reratos.timehandler.core.WorldManager;
+import me.reratos.timehandler.enums.MoonPhasesEnum;
 import me.reratos.timehandler.enums.ThunderEnum;
 import me.reratos.timehandler.enums.TimeEnum;
 import me.reratos.timehandler.enums.WeatherEnum;
@@ -17,6 +18,7 @@ public class SetCommand {
 	private final static String thunder = "thunder";
 	private final static String time = "time";
 	private final static String timeFixed = "timeFixed";
+	private final static String moonPhase = "moonPhase";
 
 	private final static String optionDefault 	= "default";
 	private final static String optionRain 		= "rain";
@@ -33,16 +35,17 @@ public class SetCommand {
 	
 	public static boolean commandSetDefault(CommandSender sender, String worldName) {
 
-		TimeHandler.config.set("configWorld." + worldName, null);
-		TimeHandler.config.set("configWorld." + worldName + ".enabled", true);
-		TimeHandler.config.set("configWorld." + worldName + ".weather", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".thunder", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".time", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".timeFixed", 1000);
+		TimeHandler.worldsConfig.set("worlds." + worldName, null);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".enabled", true);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".weather", "default");
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".thunder", "default");
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".time", "default");
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".timeFixed", 1000);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".moonPhase", "default");
 		
-		TimeHandler.plugin.saveConfig();
+		TimeHandler.plugin.saveWorldsConfig();
 		
-		TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Configuração padrão criada para o mundo: " + 
+		TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Default configuration created for the world: " + 
 				ChatColor.GREEN + worldName);
 		TimeManager.initTask(worldName);
 		return true;
@@ -75,15 +78,19 @@ public class SetCommand {
 			case timeFixed:
 				ret = commandSetTimeFixed(sender, worldManager, property, value);
 				break;
+				
+			case moonPhase:
+				ret = commandSetMoonPhase(sender, worldManager, property, value);
+				break;
 	
 			default:
 				return false;
 		}
 
 		if(ret) {
-			TimeHandler.sendMessage(sender, "Alterado a propriedade '" + ChatColor.AQUA + property + ChatColor.RESET + 
-					"' para o valor: '" + ChatColor.LIGHT_PURPLE + value + ChatColor.RESET + "'");
-			TimeHandler.plugin.saveConfig();
+			TimeHandler.sendMessage(sender, "The '" + ChatColor.AQUA + property + ChatColor.RESET + 
+					"' property changed to: '" + ChatColor.LIGHT_PURPLE + value + ChatColor.RESET + "'");
+			TimeHandler.plugin.saveWorldsConfig();
 		}
 		
 		return ret;
@@ -103,7 +110,7 @@ public class SetCommand {
 				return false;
 		}
 	}
-	
+
 	public static boolean commandSetTimeFixed(CommandSender sender, WorldManager worldManager, String property, String value) {
 		try {
 			int tempo = Integer.parseInt(value);
@@ -116,9 +123,21 @@ public class SetCommand {
 			return true;
 			
 		} catch (NumberFormatException e) {
-			messageValorInvalido(sender, property, value, "(0 - 24000)");
+			messageValorInvalido(sender, property, value, " (0 - 24000)");
 			return false;
 		}
+	}
+
+	public static boolean commandSetMoonPhase(CommandSender sender, WorldManager worldManager, String property, String value) {
+		for(String phase : MoonPhasesEnum.getList()) {
+			if(phase.toLowerCase().equals(value.toLowerCase())) {
+				configSetValue(worldManager, property, phase);
+				worldManager.setMoonPhase(MoonPhasesEnum.getEnumPorValue(phase));
+				return true;
+			}
+		}
+		messageValorInvalido(sender, property, value);
+		return false;
 	}
 	
 	public static boolean commandSetThunder(CommandSender sender, WorldManager worldManager, String property, String value) {
@@ -167,12 +186,12 @@ public class SetCommand {
 	}
 	
 	private static void messageValorInvalido(CommandSender sender, String property, String value, String sufix) {
-		TimeHandler.sendMessage(sender, "Valor '" + ChatColor.RED + value + ChatColor.RESET + 
-				"' para a propriedade " + ChatColor.AQUA + property + ChatColor.RESET + " é invalido. " + 
+		TimeHandler.sendMessage(sender, "The value '" + ChatColor.RED + value + ChatColor.RESET + 
+				"' is invalid for property '" + ChatColor.AQUA + property + ChatColor.RESET + "'. " + 
 				ChatColor.YELLOW + sufix + ChatColor.RESET);
 	}
 	
 	private static void configSetValue(WorldManager worldManager, String property, Object value) {
-		TimeHandler.config.set("configWorld." + worldManager.getWorld().getName() + "." + property, value);
+		TimeHandler.worldsConfig.set("worlds." + worldManager.getWorld().getName() + "." + property, value);
 	}
 }

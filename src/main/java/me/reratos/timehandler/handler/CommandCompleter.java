@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
 
+import me.reratos.timehandler.handler.completer.MoonPhaseCompleter;
 import me.reratos.timehandler.handler.completer.SetCompleter;
 
 public class CommandCompleter implements TabCompleter{
@@ -55,10 +56,16 @@ public class CommandCompleter implements TabCompleter{
 			Collections.sort(completions);
 			return completions;
 
+		case "moonphase":
+			MoonPhaseCompleter.completer(command, label, params, completions);
+			break;
+			
 		default:
 			break;
 		}
-		return null;
+		
+		Collections.sort(completions);
+		return completions;
 	}
 
 }

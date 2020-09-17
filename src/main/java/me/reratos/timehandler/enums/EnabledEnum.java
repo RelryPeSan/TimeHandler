@@ -1,25 +1,25 @@
-package me.reratos.timehandler.handler.completer.enums;
+package me.reratos.timehandler.enums;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public enum SetEnabledEnum {
+public enum EnabledEnum {
 	FALSE("false"),
 	TRUE("true");
 //	OFF("off"),
 //	ON("on");
 
 	private final String enabled;
-	private static final Map<String, SetEnabledEnum> map = new HashMap<>();
+	private static final Map<String, EnabledEnum> map = new HashMap<>();
 
 	static {
-		for(SetEnabledEnum e : SetEnabledEnum.values()) {
+		for(EnabledEnum e : EnabledEnum.values()) {
 			map.put(e.getValue(), e);
 		}
 	}
 
-	SetEnabledEnum(String enabled) {
+	EnabledEnum(String enabled) {
 		this.enabled = enabled;
 	}
 
@@ -27,7 +27,7 @@ public enum SetEnabledEnum {
 		return enabled;
 	}
 
-	public static SetEnabledEnum getEnumPorValue(String value) {
+	public static EnabledEnum getEnumPorValue(String value) {
 		return map.get(value);
 	}
 	

@@ -11,9 +11,11 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 
 import me.reratos.timehandler.TimeHandler;
+import me.reratos.timehandler.enums.MoonPhasesEnum;
 import me.reratos.timehandler.enums.ThunderEnum;
 import me.reratos.timehandler.enums.TimeEnum;
 import me.reratos.timehandler.enums.WeatherEnum;
+import me.reratos.timehandler.utils.ConstantsConfig;
 
 public class TimeManager {
 	
@@ -25,7 +27,7 @@ public class TimeManager {
 		if(w != null) {
 			day(sender, w);
 		} else {
-			TimeHandler.sendMessage(sender, "Este mundo não existe!");
+			TimeHandler.sendMessage(sender, "This world does not exist!");
 		}
 		
 		return true;
@@ -47,7 +49,7 @@ public class TimeManager {
 		if(w != null) {
 			night(sender, w);
 		} else {
-			TimeHandler.sendMessage(sender, "Este mundo não existe!");
+			TimeHandler.sendMessage(sender, "This world does not exist!");
 		}
 		
 		return true;
@@ -63,18 +65,50 @@ public class TimeManager {
 		return true;
 	}
 
+	public static boolean moonPhase(CommandSender sender, MoonPhasesEnum moonPhase, String worldName) {
+		World w = Bukkit.getWorld(worldName);
+		
+		if(w != null) {
+			moonPhase(sender, moonPhase, w);
+		} else {
+			TimeHandler.sendMessage(sender, "This world does not exist!");
+		}
+		
+		return true;
+	}
+	
+	public static boolean moonPhase(CommandSender sender, MoonPhasesEnum moonPhase, World world) {
+		try {
+			if(moonPhase == MoonPhasesEnum.DEFAULT) return false;
+			
+			long fullTime = world.getFullTime();
+			long days = fullTime / 24000;
+        	int currentPhase = (int) (days % 8);
+        	int targetPhase = moonPhase.ordinal();
+        	int timeSkip = (targetPhase < currentPhase ? (targetPhase + 8) - currentPhase : targetPhase - currentPhase);
+        	
+        	if(timeSkip != 0) {
+        		world.setFullTime(fullTime + (timeSkip * 24000));
+        	}
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return true;
+	}
+
 
 	private static void changeTime(CommandSender sender, World world, int time) {
 		world.setTime(time);
 		
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			TimeHandler.broadcastMessage("O player " + ChatColor.BLUE + p.getDisplayName() + 
-					ChatColor.RESET + " alterou o tempo do mundo " + ChatColor.GREEN + world.getName() +
-					ChatColor.RESET + " para " + time);
+			TimeHandler.broadcastMessage("The player " + ChatColor.BLUE + p.getDisplayName() + 
+					ChatColor.RESET + " changed the world time " + ChatColor.GREEN + world.getName() +
+					ChatColor.RESET + " to " + time);
 		} else {
-			TimeHandler.broadcastMessage("O server alterou o tempo do mundo " + ChatColor.GREEN + 
-					world.getName() + ChatColor.RESET + " para " + time);
+			TimeHandler.broadcastMessage("The server changed the world time " + ChatColor.GREEN + 
+					world.getName() + ChatColor.RESET + " to " + time);
 		}
 	}
 	
@@ -86,14 +120,15 @@ public class TimeManager {
 			runnablesWorld.put(worldName, wm);
 			
 			Bukkit.getScheduler()
-				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 6 * 20);
+				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 
+						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
 		} else {
-			TimeHandler.sendMessage("Este mundo já possui uma instancia de gerenciamento aberta.");
+			TimeHandler.sendMessage("This world already has an open management instance.");
 			return;
 		}
-		
-		MemorySection worldConfig = (MemorySection) TimeHandler.config.get("configWorld." + worldName);
-		LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldConfig.getValues(true);
+
+		MemorySection worldsConfig = (MemorySection) TimeHandler.worldsConfig.get("worlds." + worldName);
+		LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldsConfig.getValues(true);
 
 		Object objAux;
 		
@@ -126,6 +161,19 @@ public class TimeManager {
 			wm.setWeather(WeatherEnum.getEnumPorValue(objAux.toString()));
 		} catch (Exception e) {
 			wm.setWeather(WeatherEnum.DEFAULT);
+		}
+		
+		objAux = list.get("moonPhase");
+		try {
+			wm.setMoonPhase(MoonPhasesEnum.DEFAULT);
+			for(MoonPhasesEnum moon : MoonPhasesEnum.values()) {
+				if(moon.getValue().toLowerCase().equals(((String) objAux).toLowerCase())) {
+					wm.setMoonPhase(moon);
+					break;
+				}
+			}
+		} catch (Exception e) {
+			wm.setMoonPhase(MoonPhasesEnum.DEFAULT);
 		}
 	}
 	

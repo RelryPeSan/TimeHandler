@@ -2,6 +2,7 @@ package me.reratos.timehandler.enums;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public enum WeatherEnum {
 	DEFAULT	("default"),
@@ -27,6 +28,10 @@ public enum WeatherEnum {
 
 	public static WeatherEnum getEnumPorValue(String value) {
 		return map.get(value);
+	}
+
+	public static Set<String> getList() {
+		return map.keySet();
 	}
 	
 }
