@@ -35,15 +35,15 @@ public class SetCommand {
 	
 	public static boolean commandSetDefault(CommandSender sender, String worldName) {
 
-		TimeHandler.config.set("configWorld." + worldName, null);
-		TimeHandler.config.set("configWorld." + worldName + ".enabled", true);
-		TimeHandler.config.set("configWorld." + worldName + ".weather", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".thunder", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".time", "default");
-		TimeHandler.config.set("configWorld." + worldName + ".timeFixed", 1000);
-		TimeHandler.config.set("configWorld." + worldName + ".moonPhase", "default");
+		TimeHandler.worldsConfig.set("worlds." + worldName, null);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".enabled", true);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".weather", "default");
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".thunder", "default");
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".time", "default");
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".timeFixed", 1000);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".moonPhase", "default");
 		
-		TimeHandler.plugin.saveConfig();
+		TimeHandler.plugin.saveWorldsConfig();
 		
 		TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Default configuration created for the world: " + 
 				ChatColor.GREEN + worldName);
@@ -90,7 +90,7 @@ public class SetCommand {
 		if(ret) {
 			TimeHandler.sendMessage(sender, "The '" + ChatColor.AQUA + property + ChatColor.RESET + 
 					"' property changed to: '" + ChatColor.LIGHT_PURPLE + value + ChatColor.RESET + "'");
-			TimeHandler.plugin.saveConfig();
+			TimeHandler.plugin.saveWorldsConfig();
 		}
 		
 		return ret;
@@ -192,6 +192,6 @@ public class SetCommand {
 	}
 	
 	private static void configSetValue(WorldManager worldManager, String property, Object value) {
-		TimeHandler.config.set("configWorld." + worldManager.getWorld().getName() + "." + property, value);
+		TimeHandler.worldsConfig.set("worlds." + worldManager.getWorld().getName() + "." + property, value);
 	}
 }

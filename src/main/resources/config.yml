@@ -1,3 +1,9 @@
-# configWorld
-configWorld:
-    
+# Config Plugin Time Handler
+# Relry Pereira dos Santos
+# version: 1.0
+# 
+# Property for plugin
+# 
+
+check-update-plugin: true
+ticks-check-update-worlds: 60

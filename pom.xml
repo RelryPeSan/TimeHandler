@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.reratos.timehandler</groupId>
 	<artifactId>TimeHandler</artifactId>
-	<version>1.2.0-beta</version>
+	<version>1.2.1-beta</version>
 	
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -19,6 +19,7 @@
 				<includes>
 					<include>**/plugin.yml</include>
 					<include>**/config.yml</include>
+					<include>**/worldsConfig.yml</include>
 				</includes>
 			</resource>
 		</resources>

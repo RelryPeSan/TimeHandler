@@ -1,9 +1,9 @@
 name: TimeHandler
-version: 1.2.0-beta
+version: 1.2.1-beta
 main: me.reratos.timehandler.TimeHandler
 author: Relry
 database: false
-website: none
+website: https://www.spigotmc.org/resources/timehandler.83803/
 description: >
     Permite manipular o tempo dos mundos e/ou fixar uma condição para o mesmo.
 

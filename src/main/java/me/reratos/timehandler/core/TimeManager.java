@@ -15,6 +15,7 @@ import me.reratos.timehandler.enums.MoonPhasesEnum;
 import me.reratos.timehandler.enums.ThunderEnum;
 import me.reratos.timehandler.enums.TimeEnum;
 import me.reratos.timehandler.enums.WeatherEnum;
+import me.reratos.timehandler.utils.ConstantsConfig;
 
 public class TimeManager {
 	
@@ -119,14 +120,15 @@ public class TimeManager {
 			runnablesWorld.put(worldName, wm);
 			
 			Bukkit.getScheduler()
-				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 3 * 20);
+				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 
+						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
 		} else {
 			TimeHandler.sendMessage("This world already has an open management instance.");
 			return;
 		}
-		
-		MemorySection worldConfig = (MemorySection) TimeHandler.config.get("configWorld." + worldName);
-		LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldConfig.getValues(true);
+
+		MemorySection worldsConfig = (MemorySection) TimeHandler.worldsConfig.get("worlds." + worldName);
+		LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldsConfig.getValues(true);
 
 		Object objAux;
 		
