@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.reratos.timehandler</groupId>
 	<artifactId>TimeHandler</artifactId>
-	<version>1.2.1-beta</version>
+	<version>1.2.2-beta</version>
 	
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>

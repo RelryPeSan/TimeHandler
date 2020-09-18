@@ -31,35 +31,45 @@ public class CommandHandler {
         	return false;
         }
 
-        MemorySection worldsConfigMS = (MemorySection) TimeHandler.worldsConfig.get("worlds." + worldName);
+        return info(sender, world);
+	}
+	
+	public static boolean info(CommandSender sender, World world) {
+		String worldName = world.getName();
+		
+		MemorySection worldsConfigMS = (MemorySection) TimeHandler.worldsConfig.get("worlds." + worldName);
         
         if(worldsConfigMS == null) {
         	TimeHandler.sendMessage(sender, "This world has NOT yet been added to the handler.");
         } else {
         	WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
+        	
         	String status = ChatColor.RESET + "[" + (wm.getWorld() == null ? ChatColor.RED + "RUNNING ERROR" : (
         			wm.isEnabled() ? ChatColor.GREEN + "RUNNING" : ChatColor.RED + "OFF")) +
         			ChatColor.RESET + "]";
-        	TimeHandler.sendMessage(sender, ChatColor.YELLOW + "World name: " + ChatColor.GREEN + worldName + 
+        	
+        	sender.sendMessage(ChatColor.YELLOW + "World name: " + ChatColor.GREEN + worldName + 
         			ChatColor.RESET +" - " + status);
-        	TimeHandler.sendMessage(sender, "Current time: " + world.getTime() + ", FullTime: " + world.getFullTime());
+        	
+        	sender.sendMessage("Current time: " + world.getTime() + ", FullTime: " + world.getFullTime());
+        	
         	long days = world.getFullTime() / 24000;
         	int phase = (int) (days % 8);
-        	TimeHandler.sendMessage(sender, "Moon phase: " + ChatColor.BLUE + MoonPhasesEnum.values()[phase].name());
+        	sender.sendMessage("Moon phase: " + ChatColor.BLUE + MoonPhasesEnum.values()[phase].name());
         	
         	LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldsConfigMS.getValues(true);
 
         	String climaAtual = WeatherManager.getClimaAtual(world);
-        	TimeHandler.sendMessage(sender, "Current weather: " + climaAtual + ", change in: " + world.getWeatherDuration());
+        	sender.sendMessage("Current weather: " + climaAtual + ", change in: " + world.getWeatherDuration());
         	
         	// Lista as informações de ambiente do mundo
-        	info(sender, list);
+        	listInfo(sender, list);
         }
         
 		return true;
 	}
 	
-	private static void info(CommandSender sender, Map<String, Object> list) {
+	private static void listInfo(CommandSender sender, Map<String, Object> list) {
 		if(list == null) {
 			return;
 		}
