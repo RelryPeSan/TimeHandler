@@ -79,6 +79,8 @@ public class CommandHandler {
 		sendMessage(sender, "thunder: " + getValueMessageInfo(list, "thunder"));
 		sendMessage(sender, "time: " 	+ getValueMessageInfo(list, "time"));
 		sendMessage(sender, "timeFixed: " + getValueMessageInfo(list, "timeFixed"));
+		sendMessage(sender, "durationDay: " + getValueMessageInfo(list, "durationDay"));
+		sendMessage(sender, "durationNight: " + getValueMessageInfo(list, "durationNight"));
 		sendMessage(sender, "moonPhase: " + getValueMessageInfo(list, "moonPhase"));
 	}
 	
@@ -220,7 +222,7 @@ public class CommandHandler {
 	}
 
 	private static void sendMessage(CommandSender sender, String message) {
-		sender.sendMessage("   " + ChatColor.YELLOW + message);
+		sender.sendMessage("  " + ChatColor.YELLOW + message);
 	}
 	
 	private static String getValueMessageInfo(Map<String, Object> list, String key) {

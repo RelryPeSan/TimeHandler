@@ -18,6 +18,8 @@ public class SetCommand {
 	private final static String thunder = "thunder";
 	private final static String time = "time";
 	private final static String timeFixed = "timeFixed";
+	private final static String durationDay = "durationDay";
+	private final static String durationNight = "durationNight";
 	private final static String moonPhase = "moonPhase";
 
 	private final static String optionDefault 	= "default";
@@ -28,6 +30,7 @@ public class SetCommand {
 	private final static String optionDay 		= "day";
 	private final static String optionNight 	= "night";
 	private final static String optionFixed 	= "fixed";
+	private final static String optionConfigured 	= "configured";
 	
 //	public static boolean commandSetWeather(CommandSender sender, String worldName, String property, String value) {
 //		return true;
@@ -41,6 +44,8 @@ public class SetCommand {
 		TimeHandler.worldsConfig.set("worlds." + worldName + ".thunder", "default");
 		TimeHandler.worldsConfig.set("worlds." + worldName + ".time", "default");
 		TimeHandler.worldsConfig.set("worlds." + worldName + ".timeFixed", 1000);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".durationDay", 18000);
+		TimeHandler.worldsConfig.set("worlds." + worldName + ".durationNight", 6000);
 		TimeHandler.worldsConfig.set("worlds." + worldName + ".moonPhase", "default");
 		
 		TimeHandler.plugin.saveWorldsConfig();
@@ -79,6 +84,14 @@ public class SetCommand {
 				ret = commandSetTimeFixed(sender, worldManager, property, value);
 				break;
 				
+			case durationDay:
+				ret = commandSetDurationDay(sender, worldManager, property, value);
+				break;
+				
+			case durationNight:
+				ret = commandSetDurationNight(sender, worldManager, property, value);
+				break;
+				
 			case moonPhase:
 				ret = commandSetMoonPhase(sender, worldManager, property, value);
 				break;
@@ -102,6 +115,7 @@ public class SetCommand {
 			case optionDay:
 			case optionNight:
 			case optionFixed:
+			case optionConfigured:
 				configSetValue(worldManager, property, value);
 				worldManager.setTime(TimeEnum.getEnumPorValue(value));
 				return true;
@@ -124,6 +138,44 @@ public class SetCommand {
 			
 		} catch (NumberFormatException e) {
 			messageValorInvalido(sender, property, value, " (0 - 24000)");
+			return false;
+		}
+	}
+
+	public static boolean commandSetDurationDay(CommandSender sender, WorldManager worldManager, String property, String value) {
+		try {
+			int tempo = Integer.parseInt(value);
+			if(tempo >= (worldManager.getDurationDefaultDay() / 10) && tempo <= (worldManager.getDurationDefaultDay() * 10)) {
+				configSetValue(worldManager, property, Integer.parseInt(value));
+				worldManager.setDurationDay(tempo);
+			} else {
+				throw new NumberFormatException();
+			}
+			return true;
+			
+		} catch (NumberFormatException e) {
+			messageValorInvalido(sender, property, value, " (" + 
+					(int)(worldManager.getDurationDefaultDay() / 10) + 
+					" - " + (int)(worldManager.getDurationDefaultDay() * 10) + ")");
+			return false;
+		}
+	}
+
+	public static boolean commandSetDurationNight(CommandSender sender, WorldManager worldManager, String property, String value) {
+		try {
+			int tempo = Integer.parseInt(value);
+			if(tempo >= (worldManager.getDurationDefaultNight() / 10) && tempo <= (worldManager.getDurationDefaultNight() * 10)) {
+				configSetValue(worldManager, property, Integer.parseInt(value));
+				worldManager.setDurationNight(tempo);
+			} else {
+				throw new NumberFormatException();
+			}
+			return true;
+			
+		} catch (NumberFormatException e) {
+			messageValorInvalido(sender, property, value, " (" + 
+					(int)(worldManager.getDurationDefaultNight() / 10) + 
+					" - " + (int)(worldManager.getDurationDefaultNight() * 10) + ")");
 			return false;
 		}
 	}

@@ -6,4 +6,10 @@
 # 
 
 check-update-plugin: true
-ticks-check-update-worlds: 60
+ticks-check-update-worlds: 40
+default-language: en_US # configuration without effect yet (soon)
+
+# configure where day and night start for the server
+# used to configure the duration of day and night
+day-begin-in: 23000   # configuration without effect yet (soon)
+night-begin-in: 13000 # configuration without effect yet (soon)

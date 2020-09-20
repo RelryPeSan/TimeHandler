@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 public enum OptionsSetEnum {
+	DURATION_DAY("durationDay"),
+	DURATION_NIGHT("durationNight"),
 	ENABLED("enabled"),
 	MOON_PHASE("moonPhase"),
 	TIME("time"),

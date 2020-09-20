@@ -120,7 +120,8 @@ public class TimeManager {
 			runnablesWorld.put(worldName, wm);
 			
 			Bukkit.getScheduler()
-				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 
+				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 
+						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS), 
 						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
 		} else {
 			TimeHandler.sendMessage("This world already has an open management instance.");
@@ -174,6 +175,20 @@ public class TimeManager {
 			}
 		} catch (Exception e) {
 			wm.setMoonPhase(MoonPhasesEnum.DEFAULT);
+		}
+		
+		objAux = list.get("durationDay");
+		try {
+			wm.setDurationDay((int) objAux);
+		} catch (Exception e) {
+			wm.setDurationDay(14000);
+		}
+		
+		objAux = list.get("durationNight");
+		try {
+			wm.setDurationNight((int) objAux);
+		} catch (Exception e) {
+			wm.setDurationNight(8000);
 		}
 	}
 	

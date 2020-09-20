@@ -288,12 +288,12 @@ public class TimeHandler extends JavaPlugin {
 	public void defineDefaultWorldsConfig() {
         worldsConfig = YamlConfiguration.loadConfiguration(fileWorldsConfig);
 
-        final InputStream defConfigStream = getResource(nameFileWorldsConfig);
-        if (defConfigStream == null) {
+        final InputStream inputStream = getResource(nameFileWorldsConfig);
+        if (inputStream == null) {
             return;
         }
 
-        worldsConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+        worldsConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(inputStream, Charsets.UTF_8)));
 	}
 
 }
