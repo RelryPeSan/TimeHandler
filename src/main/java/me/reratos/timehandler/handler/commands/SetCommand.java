@@ -101,12 +101,12 @@ public class SetCommand {
 		}
 
 		if(ret) {
-			TimeHandler.sendMessage(sender, "The '" + ChatColor.AQUA + property + ChatColor.RESET + 
+			sender.sendMessage("The '" + ChatColor.AQUA + property + ChatColor.RESET + 
 					"' property changed to: '" + ChatColor.LIGHT_PURPLE + value + ChatColor.RESET + "'");
 			TimeHandler.plugin.saveWorldsConfig();
 		}
 		
-		return ret;
+		return true;
 	}
 	
 	public static boolean commandSetTime(CommandSender sender, WorldManager worldManager, String property, String value) {
@@ -238,8 +238,8 @@ public class SetCommand {
 	}
 	
 	private static void messageValorInvalido(CommandSender sender, String property, String value, String sufix) {
-		TimeHandler.sendMessage(sender, "The value '" + ChatColor.RED + value + ChatColor.RESET + 
-				"' is invalid for property '" + ChatColor.AQUA + property + ChatColor.RESET + "'. " + 
+		sender.sendMessage("The value '" + ChatColor.RED + value + ChatColor.RESET + 
+				"' is invalid for property '" + ChatColor.AQUA + property + ChatColor.RESET + "'." + 
 				ChatColor.YELLOW + sufix + ChatColor.RESET);
 	}
 	

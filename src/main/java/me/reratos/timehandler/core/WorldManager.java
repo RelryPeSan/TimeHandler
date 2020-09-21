@@ -28,19 +28,42 @@ public class WorldManager implements Runnable {
 	private int durationNight;
 	private MoonPhasesEnum moonPhase;
 
+	private final int beginDay;
+	private final int beginNight;
+	private final int durationDefaultDay;
+	private final int durationDefaultNight;
+	
+	// variaveis para auxiliar na duração do dia e da noite
+	static double offset = 0;
 	private float auxTicksDay;
 	private float auxTicksNight;
 
-	private final float durationDefaultDay = 14000f;	// min 1400 - max 140000
-	private final float durationDefaultNight = 10000f;	// min 1000 - max 100000
-	
-	// variavel para auxiliar na duração do dia e da noite
-	static double offset = 0;
-	
-	public WorldManager(String nameWorld) {
+	public WorldManager(String worldName) {
 		super();
-		this.setNameWorld(nameWorld);
-		this.world = Bukkit.getWorld(nameWorld);
+		this.setNameWorld(worldName);
+		this.world = Bukkit.getWorld(worldName);
+		this.beginDay = 23000;
+		this.beginNight = 13000;
+		this.durationDefaultDay = 14000;	// min 1400 - max 140000
+		this.durationDefaultNight = 10000;	// min 1000 - max 100000
+	}
+
+	public WorldManager(String worldName, int beginDay, int beginNight) {
+		super();
+		this.setNameWorld(worldName);
+		this.world = Bukkit.getWorld(worldName);
+		
+		if(((beginDay >= 22000 	&& beginDay <= 23999 ) || beginDay == 0 ) && 
+				(beginNight >= 12000 && beginNight <= 14000 )) {
+			this.beginDay = beginDay;
+			this.beginNight = beginNight;
+		} else {
+			this.beginDay = 23000;
+			this.beginNight = 13000;
+		}
+		
+		this.durationDefaultDay = (beginDay == 0 ? beginNight : (24000 - beginDay) + beginNight);
+		this.durationDefaultNight = (beginDay == 0 ? 24000 - beginNight : beginDay - beginNight );
 	}
 
 	public boolean isEnabled() {
@@ -96,7 +119,13 @@ public class WorldManager implements Runnable {
 	}
 
 	public void setDurationDay(int durationDay) {
-		this.durationDay = durationDay;
+		if(durationDay < durationDefaultDay / 10) {
+			this.durationDay = durationDefaultDay / 10;
+		} else if(durationDay > durationDefaultDay * 10) {
+			this.durationDay = durationDefaultDay * 10;
+		} else {
+			this.durationDay = durationDay;
+		}
 	}
 
 	public int getDurationNight() {
@@ -104,7 +133,13 @@ public class WorldManager implements Runnable {
 	}
 
 	public void setDurationNight(int durationNight) {
-		this.durationNight = durationNight;
+		if(durationNight < durationDefaultNight / 10) {
+			this.durationNight = durationDefaultNight / 10;
+		} else if(durationNight > durationDefaultNight * 10) {
+			this.durationNight = durationDefaultNight * 10;
+		} else {
+			this.durationNight = durationNight;
+		}
 	}
 
 	public MoonPhasesEnum getMoonPhase() {
@@ -145,8 +180,8 @@ public class WorldManager implements Runnable {
 		}
 
 		if(time == TimeEnum.CONFIGURED) {
-			auxTicksDay = durationDefaultDay / (float)durationDay;
-			auxTicksNight = durationDefaultNight / (float)durationNight;
+			auxTicksDay = (float) durationDefaultDay / (float) durationDay;
+			auxTicksNight = (float) durationDefaultNight / (float) durationNight;
 			initializeBukkitTask();
 		} else {
 			if(bukkitTask != null) {
@@ -213,7 +248,7 @@ public class WorldManager implements Runnable {
 					int hoursDay = (int) (fullTime % 24000);
 					
 					// if night
-					if(hoursDay >= 13000 && hoursDay < 23000) {
+					if(hoursDay >= beginNight && hoursDay < (beginDay >= 0 ? 24000 : beginDay)) {
 						offset += auxTicksNight;
 					} else { // else day
 						offset += auxTicksDay;

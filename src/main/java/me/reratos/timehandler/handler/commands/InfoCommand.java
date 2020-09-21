@@ -24,7 +24,7 @@ public class InfoCommand {
 		MemorySection worldsConfigMS = (MemorySection) TimeHandler.worldsConfig.get("worlds." + worldName);
         
         if(worldsConfigMS == null) {
-        	TimeHandler.sendMessage(sender, "This world has NOT yet been added to the handler.");
+        	sender.sendMessage("This world has NOT yet been added to the handler.");
         } else {
         	WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
         	
@@ -54,57 +54,59 @@ public class InfoCommand {
 	}
 
 	private static void listInfo(CommandSender sender, String worldName, Map<String, Object> list) {
+		boolean enabledProperty = true;
+		
 		if(list == null) {
 			return;
 		}
 		
 		WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
 
-		sendMessage(sender, "enabled: " + getValueMessageInfo(list, "enabled"));
+		enabledProperty = wm.isEnabled();
 		
-		sendMessage(sender, "weather: " + getValueMessageInfo(list, "weather"));
+		sendMessage(sender, "enabled", wm.isEnabled());
+		
+		sendMessage(sender, "weather", wm.getWeather().getValue(), enabledProperty);
 		
 		if(wm.getWeather() != WeatherEnum.CALM) {
-			sendMessage(sender, "thunder: " + getValueMessageInfo(list, "thunder"));
+			sendMessage(sender, "thunder", wm.getThunder().getValue(), enabledProperty);
 		} else {
-			sendMessage(sender, ChatColor.DARK_GRAY + "thunder: " + getValueMessage(list, "thunder"));
+			sendMessage(sender, "thunder", wm.getThunder().getValue(), false);
 		}
 		
-		sendMessage(sender, "time: " 	+ getValueMessageInfo(list, "time"));
+		sendMessage(sender, "time", wm.getTime().getValue(), enabledProperty);
 		
 		if(wm.getTime() == TimeEnum.FIXED) {
-			sendMessage(sender, "timeFixed: " + getValueMessageInfo(list, "timeFixed"));
+			sendMessage(sender, "timeFixed", wm.getTimeFixed(), enabledProperty);
 		} else {
-			sendMessage(sender, ChatColor.DARK_GRAY + "timeFixed: " + getValueMessage(list, "timeFixed"));
+			sendMessage(sender, "timeFixed", wm.getTimeFixed(), false);
 		}
 		
 		if(wm.getTime() == TimeEnum.CONFIGURED) {
-			sendMessage(sender, "durationDay: " + getValueMessageInfo(list, "durationDay"));
-			sendMessage(sender, "durationNight: " + getValueMessageInfo(list, "durationNight"));
+			sendMessage(sender, "durationDay", wm.getDurationDay(), enabledProperty);
+			sendMessage(sender, "durationNight", wm.getDurationNight(), enabledProperty);
 		} else {
-			sendMessage(sender, ChatColor.DARK_GRAY + "durationDay: " + getValueMessage(list, "durationDay"));
-			sendMessage(sender, ChatColor.DARK_GRAY + "durationNight: " + getValueMessage(list, "durationNight"));
+			sendMessage(sender, "durationDay", wm.getDurationDay(), false);
+			sendMessage(sender, "durationNight", wm.getDurationNight(), false);
 		}
 		
 		if(wm.getTime() != TimeEnum.DAY) {
-			sendMessage(sender, "moonPhase: " + getValueMessageInfo(list, "moonPhase"));
+			sendMessage(sender, "moonPhase", wm.getMoonPhase().getValue(), enabledProperty);
 		} else {
-			sendMessage(sender, ChatColor.DARK_GRAY + "moonPhase: " + getValueMessage(list, "moonPhase"));
+			sendMessage(sender, "moonPhase", wm.getMoonPhase().getValue(), false);
 		}
 	}
 
-	private static void sendMessage(CommandSender sender, String message) {
-		sender.sendMessage("  " + ChatColor.YELLOW + message);
+	private static void sendMessage(CommandSender sender, String property, Object value) {
+		sendMessage(sender, property, value, true);
 	}
-	
-	private static String getValueMessage(Map<String, Object> list, String key) {
-		Object obj = list.get(key);
-		return obj != null ? obj.toString() : "-" ;
+
+	private static void sendMessage(CommandSender sender, String property, Object value, boolean enabled) {
+		if(enabled) {
+			sender.sendMessage("  " + ChatColor.YELLOW + property + ": " + (value != null ? ChatColor.WHITE + value.toString() : ChatColor.DARK_GRAY + "-" ));
+		} else {
+			sender.sendMessage("  " + ChatColor.DARK_GRAY + property + ": " + (value != null ? value.toString() : "-" ) );
+		}
 	}
-	
-	private static String getValueMessageInfo(Map<String, Object> list, String key) {
-		Object obj = list.get(key);
-		return obj != null ? ChatColor.WHITE + obj.toString() : ChatColor.DARK_GRAY + "-" ;
-	}
-	
+
 }

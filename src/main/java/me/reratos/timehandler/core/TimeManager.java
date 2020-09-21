@@ -116,7 +116,20 @@ public class TimeManager {
 		WorldManager wm = runnablesWorld.get(worldName);
 		
 		if(wm == null) {
-			wm = new WorldManager(worldName);
+			Object objDay = TimeHandler.config.get("day-begin-in");
+			Object objNight = TimeHandler.config.get("night-begin-in");
+			
+			if(objDay != null && objNight != null && 
+					(((int) objDay >= 22000 	&& (int) objDay <= 23999 ) || (int) objDay == 0 ) && 
+					( (int) objNight >= 12000 	&& (int) objNight <= 14000 ) ) {
+				int beginDay = (int) objDay;
+				int beginNight = (int) objNight;
+				
+				wm = new WorldManager(worldName, beginDay, beginNight);
+			} else {
+				wm = new WorldManager(worldName);
+			}
+			
 			runnablesWorld.put(worldName, wm);
 			
 			Bukkit.getScheduler()
@@ -188,7 +201,7 @@ public class TimeManager {
 		try {
 			wm.setDurationNight((int) objAux);
 		} catch (Exception e) {
-			wm.setDurationNight(8000);
+			wm.setDurationNight(10000);
 		}
 	}
 	

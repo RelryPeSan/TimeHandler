@@ -26,7 +26,8 @@ public class CommandHandler {
 		// verifica existencia do mundo
 		World world = Bukkit.getWorld(worldName);
         if(world == null) {
-        	return false;
+        	sender.sendMessage(ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
+        	return true;
         }
 
         return info(sender, world);
@@ -45,14 +46,14 @@ public class CommandHandler {
 
 		
 		if(worldsMS == null) {
-			TimeHandler.sendMessage(sender, "No world has been configured in the TimeHandler plugin.");
+			sender.sendMessage("No world has been configured in the TimeHandler plugin.");
 		} else {
 			LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) worldsMS.getValues(false);
 			List<String> lista = new ArrayList<>(map.keySet());
 			
 			Collections.sort(lista);
 			
-			TimeHandler.sendMessage(sender, "List of configured worlds.");
+			sender.sendMessage("List of configured worlds.");
 			for(String worldName : lista) {
 				WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
 				World world = wm != null ? wm.getWorld() : null;
@@ -95,7 +96,7 @@ public class CommandHandler {
 				message.append(ChatColor.RESET);
 				message.append("]");
 				
-				TimeHandler.sendMessage(sender, message.toString());
+				sender.sendMessage(message.toString());
 //				TimeHandler.sendMessage(sender, ChatColor.YELLOW + " - " + worldName);
 			}
 		}
@@ -121,10 +122,10 @@ public class CommandHandler {
 	public static boolean set(CommandSender sender, String worldName) {
 		
 		if(!TimeHandler.existWorld(worldName)) {
-			TimeHandler.sendMessage(sender, ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
-			return false;
+			sender.sendMessage(ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
+			return true;
 		} else if(TimeHandler.worldsConfig.get("configWorld." + worldName) != null) {
-			TimeHandler.sendMessage(sender, "This world is already configured: " + ChatColor.RED + ChatColor.UNDERLINE + worldName);
+			sender.sendMessage("This world is already configured: " + ChatColor.RED + ChatColor.UNDERLINE + worldName);
 			return true;
 		}
 
@@ -135,10 +136,10 @@ public class CommandHandler {
 		WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
 		
 		if(!TimeHandler.existWorld(worldName)) {
-			TimeHandler.sendMessage(sender, ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
-			return false;
+			sender.sendMessage(ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
+			return true;
 		} else if(wm == null) {
-			TimeHandler.sendMessage(sender, "This world has not yet been configured in the plugin, use" + 
+			sender.sendMessage("This world has not yet been configured in the plugin, use" + 
 					ChatColor.GREEN + "/th set " + worldName + ChatColor.RESET + " to configure.");
 			return false;
 		}

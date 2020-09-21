@@ -4,12 +4,19 @@
 # 
 # Property for plugin
 # 
-
+# Check the update at startup
+#    check-update-plugin: default = true
+# -----------------------------------------------------------
+# How many ticks to update the properties of the worlds
+#    ticks-check-update-worlds: default = 40
+# -----------------------------------------------------------
+# Configure where day and night start for the server
+# used to configure the duration of day and night
+#    day-begin-in:     22000 - 23999 or 0 / default = 23000
+#    night-begin-in:   12000 - 14000 / default = 13000
+# -----------------------------------------------------------
 check-update-plugin: true
 ticks-check-update-worlds: 40
-default-language: en_US # configuration without effect yet (soon)
-
-# configure where day and night start for the server
-# used to configure the duration of day and night
-day-begin-in: 23000   # configuration without effect yet (soon)
-night-begin-in: 13000 # configuration without effect yet (soon)
+#default-language: en_US # configuration without effect yet (soon)
+day-begin-in: 23000
+night-begin-in: 13000
