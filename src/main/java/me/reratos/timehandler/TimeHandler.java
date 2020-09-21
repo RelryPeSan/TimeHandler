@@ -81,7 +81,7 @@ public class TimeHandler extends JavaPlugin {
 			if (sender.hasPermission("timehandler.use")) {
 
 				if (args.length == 0) {
-					sendMessage(sender, "Utilize o comando: '/help th' para mais ajuda.");
+					sendMessage(sender, "Use command: '/help th' for more help.");
 					return false;
 				}
 
@@ -94,26 +94,27 @@ public class TimeHandler extends JavaPlugin {
 //	                    	TimeHandler.sendMessage(sender, "Help em desenvolvimento!");
 					command.setUsage(
 							Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
-					sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
+					sendMessage(sender, "Use command: '/help th " + args[0].toLowerCase() + "' for more help.");
 					return false;
 
 				case "info":
-					if (args.length != 2) {
-						command.setUsage(
-								Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
-						sendMessage(sender,
-								"Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
-						return false;
+					if(args.length == 1 && sender instanceof Player) {
+						sendHeaderMessage(sender, args[0].toUpperCase());
+						return CommandHandler.info(sender, ((Player)sender).getWorld());
+					} else if (args.length == 2) {
+						sendHeaderMessage(sender, args[0].toUpperCase());
+						return CommandHandler.info(sender, args[1]);
 					}
-					sendHeaderMessage(sender, args[0].toUpperCase());
-					return CommandHandler.info(sender, args[1]);
+					command.setUsage(Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
+					sendMessage(sender,"Use command: '/help th " + args[0].toLowerCase() + "' for more help.");
+					return false;
 
 				case "list":
 					if (args.length != 1) {
 						command.setUsage(
 								Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
 						sendMessage(sender,
-								"Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
+								"Use command: '/help th " + args[0].toLowerCase() + "' for more help.");
 						return false;
 					}
 					sendHeaderMessage(sender, args[0].toUpperCase());
@@ -122,28 +123,31 @@ public class TimeHandler extends JavaPlugin {
 //						case "remove":
 //							if(args.length != 2) {
 ////								command.setUsage(Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
-//								sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
+//								sendMessage(sender, "Use command: '/help th " + args[0].toLowerCase() + "' for more help.");
 //		                    	return false;
 //							}
 //							return CommandHandler.remove(sender, args[1]);
 
 				case "set":
 					if (args.length == 2) {
+						sendHeaderMessage(sender, args[0].toUpperCase());
 						return CommandHandler.set(sender, args[1]);
 					} else if (args.length == 4) {
+						sendHeaderMessage(sender, args[0].toUpperCase());
 						return CommandHandler.set(sender, args[1], args[2], args[3]);
 					}
 					command.setUsage(
 							Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
-					sendMessage(sender, "Utilize o comando: '/help th " + args[0].toLowerCase() + "' para mais ajuda.");
+					sendMessage(sender, "Use command: '/help th " + args[0].toLowerCase() + "' for more help.");
 					return false;
 
 				case "update":
+					sendHeaderMessage(sender, args[0].toUpperCase());
 					return CommandHandler.update(sender, resourceId);
 
 				default:
 //							command.setUsage(Bukkit.getPluginCommand(command.getName()).getUsage());
-					sendMessage(sender, "Utilize o comando: '/help th' para mais ajuda.");
+					sendMessage(sender, "Use command: '/help th' for more help.");
 					return true;
 				}
 
@@ -159,7 +163,7 @@ public class TimeHandler extends JavaPlugin {
 			} else if (args.length == 1) {
 				return TimeManager.day(sender, args[0]);
 			}
-			sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
+			sendMessage(sender, "Use command: '/help " + command.getName() + "' for more help.");
 			return false;
 
 		case "night":
@@ -169,7 +173,7 @@ public class TimeHandler extends JavaPlugin {
 			} else if (args.length == 1) {
 				return TimeManager.night(sender, args[0]);
 			}
-			sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
+			sendMessage(sender, "Use command: '/help " + command.getName() + "' for more help.");
 			return false;
 
 		case "moonphase":
@@ -180,7 +184,7 @@ public class TimeHandler extends JavaPlugin {
 			} else if (args.length == 2) {
 				return TimeManager.moonPhase(sender, MoonPhasesEnum.getEnumPorValue(args[0]), args[1]);
 			}
-			sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
+			sendMessage(sender, "Use command: '/help " + command.getName() + "' for more help.");
 			return false;
 
 		case "rain":
@@ -190,7 +194,7 @@ public class TimeHandler extends JavaPlugin {
 			} else if (args.length == 1) {
 				return WeatherManager.rain(sender, args[0]);
 			}
-			sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
+			sendMessage(sender, "Use command: '/help " + command.getName() + "' for more help.");
 			break;
 
 		case "thundering":
@@ -200,7 +204,7 @@ public class TimeHandler extends JavaPlugin {
 			} else if (args.length == 1) {
 				return WeatherManager.thundering(sender, args[0]);
 			}
-			sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
+			sendMessage(sender, "Use command: '/help " + command.getName() + "' for more help.");
 			break;
 		case "calm":
 		case "thc":
@@ -209,7 +213,7 @@ public class TimeHandler extends JavaPlugin {
 			} else if (args.length == 1) {
 				return WeatherManager.calm(sender, args[0]);
 			}
-			sendMessage(sender, "Utilize o comando: '/help " + command.getName() + "' para mais ajuda.");
+			sendMessage(sender, "Use command: '/help " + command.getName() + "' for more help.");
 			break;
 		}
 
@@ -284,12 +288,12 @@ public class TimeHandler extends JavaPlugin {
 	public void defineDefaultWorldsConfig() {
         worldsConfig = YamlConfiguration.loadConfiguration(fileWorldsConfig);
 
-        final InputStream defConfigStream = getResource(nameFileWorldsConfig);
-        if (defConfigStream == null) {
+        final InputStream inputStream = getResource(nameFileWorldsConfig);
+        if (inputStream == null) {
             return;
         }
 
-        worldsConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
+        worldsConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(inputStream, Charsets.UTF_8)));
 	}
 
 }

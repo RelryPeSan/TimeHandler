@@ -8,7 +8,8 @@ public enum TimeEnum {
 	DEFAULT	("default"),
 	DAY		("day"),
 	NIGHT	("night"),
-	FIXED	("fixed");
+	FIXED	("fixed"),
+	CONFIGURED	("configured");
 	
 	private final String time;
 	private static final Map<String, TimeEnum> map = new HashMap<>();

@@ -116,11 +116,25 @@ public class TimeManager {
 		WorldManager wm = runnablesWorld.get(worldName);
 		
 		if(wm == null) {
-			wm = new WorldManager(worldName);
+			Object objDay = TimeHandler.config.get("day-begin-in");
+			Object objNight = TimeHandler.config.get("night-begin-in");
+			
+			if(objDay != null && objNight != null && 
+					(((int) objDay >= 22000 	&& (int) objDay <= 23999 ) || (int) objDay == 0 ) && 
+					( (int) objNight >= 12000 	&& (int) objNight <= 14000 ) ) {
+				int beginDay = (int) objDay;
+				int beginNight = (int) objNight;
+				
+				wm = new WorldManager(worldName, beginDay, beginNight);
+			} else {
+				wm = new WorldManager(worldName);
+			}
+			
 			runnablesWorld.put(worldName, wm);
 			
 			Bukkit.getScheduler()
-				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 10 * 20, 
+				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 
+						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS), 
 						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
 		} else {
 			TimeHandler.sendMessage("This world already has an open management instance.");
@@ -174,6 +188,20 @@ public class TimeManager {
 			}
 		} catch (Exception e) {
 			wm.setMoonPhase(MoonPhasesEnum.DEFAULT);
+		}
+		
+		objAux = list.get("durationDay");
+		try {
+			wm.setDurationDay((int) objAux);
+		} catch (Exception e) {
+			wm.setDurationDay(14000);
+		}
+		
+		objAux = list.get("durationNight");
+		try {
+			wm.setDurationNight((int) objAux);
+		} catch (Exception e) {
+			wm.setDurationNight(10000);
 		}
 	}
 	
