@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.entity.Player;
 
 import me.reratos.timehandler.TimeHandler;
 import me.reratos.timehandler.core.TimeManager;
@@ -18,6 +17,9 @@ import me.reratos.timehandler.core.WorldManager;
 import me.reratos.timehandler.handler.commands.HelpCommand;
 import me.reratos.timehandler.handler.commands.InfoCommand;
 import me.reratos.timehandler.handler.commands.SetCommand;
+import me.reratos.timehandler.utils.Constants;
+import me.reratos.timehandler.utils.LocaleLoader;
+import me.reratos.timehandler.utils.Messages;
 import me.reratos.timehandler.utils.UpdateChecker;
 
 public class CommandHandler {
@@ -26,7 +28,7 @@ public class CommandHandler {
 		// verifica existencia do mundo
 		World world = Bukkit.getWorld(worldName);
         if(world == null) {
-        	sender.sendMessage(ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
+        	sender.sendMessage(LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
         	return true;
         }
 
@@ -42,62 +44,42 @@ public class CommandHandler {
 	}
 	
 	public static boolean list(CommandSender sender) {
-		MemorySection worldsMS = (MemorySection) TimeHandler.worldsConfig.get("worlds");
+		MemorySection worldsMS = (MemorySection) TimeHandler.worldsConfig.get(Constants.WORLDS);
 
 		
 		if(worldsMS == null) {
-			sender.sendMessage("No world has been configured in the TimeHandler plugin.");
+			sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_LIST_NO_WORLD_CONFIGURED));
 		} else {
 			LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) worldsMS.getValues(false);
 			List<String> lista = new ArrayList<>(map.keySet());
 			
 			Collections.sort(lista);
 			
-			sender.sendMessage("List of configured worlds.");
+			sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_LIST_CONFIGURED_WORLDS));
 			for(String worldName : lista) {
 				WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
-				World world = wm != null ? wm.getWorld() : null;
-				StringBuilder message = new StringBuilder();
-				message.append(ChatColor.YELLOW);
-				message.append(" - ");
-				message.append(worldName);
-				
-				if(sender instanceof Player) {
-					message.append(ChatColor.RESET);
-					message.append(" - ");
-				} else {
-					message.append("\t\t");
-				}
-				
-				message.append(ChatColor.RESET);
-				message.append("[");
+				World world = (wm != null ? wm.getWorld() : null);
+
+				String running = "";
+				String loaded = "";
+
 				if(wm != null) {
 					if(wm.isEnabled()) {
-						message.append(ChatColor.GREEN);
-						message.append("RUNNING");
+						running = ChatColor.GREEN + LocaleLoader.getString(Messages.STATUS_RUNNING);
 					} else {
-						message.append(ChatColor.RED);
-						message.append("OFF");
+						running = ChatColor.RED + LocaleLoader.getString(Messages.STATUS_OFF);
 					}
 				} else {
-					message.append(ChatColor.RED);
-					message.append("NOT RUNNING");
+					running = ChatColor.RED + LocaleLoader.getString(Messages.STATUS_NOT_RUNNING);
 				}
-				message.append(ChatColor.RESET);
-				message.append(", ");
 				
 				if(world != null) {
-					message.append(ChatColor.GREEN);
-					message.append("LOADED");
+					loaded = ChatColor.GREEN + LocaleLoader.getString(Messages.STATUS_LOADED);
 				} else {
-					message.append(ChatColor.RED);
-					message.append("UNLOADED");
+					loaded = ChatColor.RED + LocaleLoader.getString(Messages.STATUS_UNLOADED);
 				}
-				message.append(ChatColor.RESET);
-				message.append("]");
 				
-				sender.sendMessage(message.toString());
-//				TimeHandler.sendMessage(sender, ChatColor.YELLOW + " - " + worldName);
+				sender.sendMessage("  " + LocaleLoader.getString(Messages.COMMAND_LIST_WORLD_INFO, worldName, running, loaded));
 			}
 		}
 		
@@ -122,10 +104,10 @@ public class CommandHandler {
 	public static boolean set(CommandSender sender, String worldName) {
 		
 		if(!TimeHandler.existWorld(worldName)) {
-			sender.sendMessage(ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
+			sender.sendMessage(LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 			return true;
-		} else if(TimeHandler.worldsConfig.get("configWorld." + worldName) != null) {
-			sender.sendMessage("This world is already configured: " + ChatColor.RED + ChatColor.UNDERLINE + worldName);
+		} else if(TimeHandler.worldsConfig.get(Constants.WORLDS_DOT + worldName) != null) {
+			sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_SET_WORLD_CONFIGURED, worldName));
 			return true;
 		}
 
@@ -136,11 +118,10 @@ public class CommandHandler {
 		WorldManager wm = TimeManager.getRunablesWorld().get(worldName);
 		
 		if(!TimeHandler.existWorld(worldName)) {
-			sender.sendMessage(ChatColor.RED + "This world does not exist: " + ChatColor.UNDERLINE + worldName);
+			sender.sendMessage(LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 			return true;
 		} else if(wm == null) {
-			sender.sendMessage("This world has not yet been configured in the plugin, use" + 
-					ChatColor.GREEN + "/th set " + worldName + ChatColor.RESET + " to configure.");
+			sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_SET_WORLD_NOT_CONFIGURED, worldName));
 			return false;
 		}
 		
@@ -153,11 +134,11 @@ public class CommandHandler {
 
 	public static boolean update(CommandSender sender, String resourceId) {
         new UpdateChecker(TimeHandler.plugin, resourceId).getVersionConsumer(version -> {
-//        	TimeHandler.sendMessage(sender, "version: " + version + ", server: " + TimeHandler.plugin.getDescription().getVersion());
         	if (TimeHandler.plugin.getDescription().getVersion().equalsIgnoreCase(version)) {
-    			TimeHandler.sendMessage(sender, "The plugin is updated. " + ChatColor.LIGHT_PURPLE + version);
+        		sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_PLUGIN_IS_UPDATED, version));
             } else {
-    			TimeHandler.sendMessage(sender, "There is a new version available: " + ChatColor.GREEN + version);
+            	sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_NEW_VERSION_AVAILABLE, version));
+    			sender.sendMessage(LocaleLoader.getString(Messages.ACCESS_URL_PLUGIN, Constants.URL_PLUGIN));
             }
         });
 		return true;
@@ -166,7 +147,8 @@ public class CommandHandler {
 	public static List<String> getWorldsTimeHandler() {
 		List<String> list = new ArrayList<String>();
 		try {
-			list.addAll(((LinkedHashMap<String, Object>)((MemorySection) TimeHandler.worldsConfig.get("worlds")).getValues(false)).keySet());			
+			list.addAll(((LinkedHashMap<String, Object>)((MemorySection) TimeHandler
+					.worldsConfig.get(Constants.WORLDS)).getValues(false)).keySet());			
 			Collections.sort(list);
 		} catch (Exception e) {
 			// nothing

@@ -15,41 +15,45 @@ public class HelpCommand {
 		
 		if(sender.hasPermission("timehandler.info.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler info");
-			TimeHandler.sendMessage(sender, "/" + cmd.getAliases().get(0) + ChatColor.GREEN + " <world>");
+			sender.sendMessage("/" + cmd.getAliases().get(0) + ChatColor.GREEN + " <world>");
 		}
 
 		if(sender.hasPermission("timehandler.list.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler list");
-			TimeHandler.sendMessage(sender, "/" + cmd.getAliases().get(0));
+			sender.sendMessage("/" + cmd.getAliases().get(0));
 		}
 
 		if(sender.hasPermission("timehandler.set.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler set");
-			TimeHandler.sendMessage(sender, "/" + cmd.getAliases().get(0) + ChatColor.GREEN + " <world> " + 
+			sender.sendMessage("/" + cmd.getAliases().get(0) + ChatColor.GREEN + " <world> " + 
 					ChatColor.LIGHT_PURPLE + "[<PROPERTY> <VALUE>]");
 		}
 
 		if(sender.hasPermission("timehandler.update.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler update");
-			TimeHandler.sendMessage(sender, "/" + cmd.getAliases().get(0));
+			sender.sendMessage("/" + cmd.getAliases().get(0));
 		}
 
 		if(sender.hasPermission("timehandler.time.use")) {
 			cmd = TimeHandler.plugin.getCommand("day");
-			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			
 			cmd = TimeHandler.plugin.getCommand("night");
-			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			
 			cmd = TimeHandler.plugin.getCommand("moonphase");
-			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.LIGHT_PURPLE + " <phase>" + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.LIGHT_PURPLE + " <phase>" + ChatColor.GREEN + " [world]");
 		}
 
 		if(sender.hasPermission("timehandler.weather.use")) {
 			cmd = TimeHandler.plugin.getCommand("calm");
-			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			
 			cmd = TimeHandler.plugin.getCommand("rain");
-			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			
 			cmd = TimeHandler.plugin.getCommand("thundering");
-			TimeHandler.sendMessage(sender, "/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
 		}
 		
 		return true;
