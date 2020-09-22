@@ -4,19 +4,25 @@
 # 
 # Property for plugin
 # 
-# Check the update at startup
-#    check-update-plugin: default = true
-# -----------------------------------------------------------
-# How many ticks to update the properties of the worlds
-#    ticks-check-update-worlds: default = 40
-# -----------------------------------------------------------
-# Configure where day and night start for the server
-# used to configure the duration of day and night
-#    day-begin-in:     22000 - 23999 or 0 / default = 23000
-#    night-begin-in:   12000 - 14000 / default = 13000
-# -----------------------------------------------------------
+# check-update-plugin: default = true
+#      Check the update at startup.
+# -------------------------------------------------------------------
+# ticks-check-update-worlds: default = 40 (ticks)
+#      How many ticks to update the properties of the worlds.
+# -------------------------------------------------------------------
+# default-language: default = en_US
+#      Set the default plugin language.
+#      see the languages available in the TimeHandler.jar/lang/
+#      OBS.: Contact me if you want to help with the translation of  
+#      the plugin to a new language
+# -------------------------------------------------------------------
+# day-begin-in:     22000 - 23999 or 0 / default = 23000 (ticks)
+# night-begin-in:   12000 - 14000 / default = 13000 (ticks)
+#      Configure where day and night start for the server.
+#      used to configure the duration of day and night
+# -------------------------------------------------------------------
 check-update-plugin: true
 ticks-check-update-worlds: 40
-#default-language: en_US # configuration without effect yet (soon)
+default-language: en_US
 day-begin-in: 23000
 night-begin-in: 13000

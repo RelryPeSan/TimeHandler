@@ -1,95 +1,78 @@
 name: TimeHandler
-version: 1.3.2-beta
+version: 1.4.0-beta
 main: me.reratos.timehandler.TimeHandler
 author: Relry
 database: false
 website: https://www.spigotmc.org/resources/timehandler.83803/
 description: >
-    Permite manipular o tempo dos mundos e/ou fixar uma condição para o mesmo.
+   It allows manipulating the time of the worlds and / or setting a condition for it.
+   Define duration (in ticks) of the day and night, define the phase of the moon..
 
 commands:
     timehandler:
-        description: Plugin Time Handler para manipular o tempo dos mundos do servidor.
+        description: Time Handler plugin to manipulate the time of the server worlds.
         aliases: [th]
         permission: timehandler.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler <action>
     "timehandler info":
-        description: Comando para verificar a configuração do mundo no timehandler.
+        description: Command to check the configuration of the world in the time handler.
         aliases: ["th info"]
         permission: timehandler.info.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler info [world]
     "timehandler help":
-        description: Comando para listar os comandos do plugin timehandler.
+        description: Command to list the timehandler plugin commands.
         aliases: ["th help"]
         permission: timehandler.help.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler help [comando]
     "timehandler list":
-        description: Comando para listar os mundos configurados no timehandler.
+        description: Command to list the worlds configured in the timehandler.
         aliases: ["th list"]
         permission: timehandler.list.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler list
-#    "timehandler remove":
-#        description: Comando para remover configuração do mundo no timehandler.
-#        aliases: ["th remove"]
-#        permission: timehandler.remove.use
-#        permission-message: Você não tem permissão para usar este comando.
-#        usage: /timehandler remove [world]
     "timehandler set":
-        description: Comando para configurar mundo no timehandler.
+        description: Command to configure the world in the timehandler.
         aliases: ["th set"]
         permission: timehandler.set.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler set <world> [<property> <value>]
     "timehandler update":
-        description: Comando para verificar atualização disponivel para o plugin.
+        description: Command to check update available for the plugin.
         aliases: ["th update"]
         permission: timehandler.update.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /timehandler update
     day:
-        description: Comando para definir tempo do mundo para 1000 ciclos(dia).
+        description: Command to set world time to 500 cycles (day).
         aliases: [thd]
         permission: timehandler.time.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /day [world]
     night:
-        description: Comando para definir tempo do mundo para 19000 ciclos(noite).
+        description: Command to set world time to 14000 cycles (night).
         aliases: [thn]
         permission: timehandler.time.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /night [world]
     moonPhase:
-        description: Comando para definir a fase da lua.
+        description: Command to set phase of the moon.
         aliases: [thmp]
         permission: timehandler.weather.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /moonPhase <phase> [world]
     rain:
-        description: Comando para definir tempo do mundo para chuvoso.
+        description: Command to set the weather of the world for rainy.
         aliases: [thr]
         permission: timehandler.weather.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /rain [world]
     thundering:
-        description: Comando para definir tempo do mundo para trovejoso.
+        description: Command to set the weather of the world for storm.
         aliases: [tht]
         permission: timehandler.weather.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /thundering [world]
     calm:
-        description: Comando para definir tempo do mundo para calmo(sem chuva).
+        description: Command to set world time to calm (no rain).
         aliases: [thc]
         permission: timehandler.weather.use
-        permission-message: Você não tem permissão para usar este comando.
         usage: /calm [world]
 
 permissions:
     timehandler.*:
-        description: Dá acesso para usar os comando do plugin TimeHandler.
+        description: Gives access to use the TimeHandler plugin commands.
         default: op
         children:
             timehandler.info.use: true
@@ -101,27 +84,24 @@ permissions:
             timehandler.time.use: true
             timehandler.weather.use: true
     timehandler.info.use:
-        description: Dá acesso para ver informações dos mundos no plugin TimeHandler.
+        description: Gives access to view world information in the TimeHandler plugin.
         default: op
     timehandler.help.use:
-        description: Dá acesso para ver a lista de comandos do plugin TimeHandler.
+        description: Gives access to see the list of commands for the TimeHandler plugin.
         default: op
     timehandler.list.use:
-        description: Dá acesso para ver a lista dos mundos já configurados no plugin TimeHandler.
+        description: Gives access to see the list of worlds already configured in the TimeHandler plugin.
         default: op
     timehandler.update.use:
-        description: Dá acesso para verificar atualizações no plugin TimeHandler.
+        description: Gives access to check for updates to the TimeHandler plugin.
         default: op
     timehandler.set.use:
-        description: Dá acesso para configurar mundo no plugin TimeHandler.
+        description: Gives access to configure world in the TimeHandler plugin.
         default: op
-#    timehandler.remove.use:
-#        description: Dá acesso para remover configuração do mundo no plugin TimeHandler.
-#        default: op
     timehandler.time.use:
-        description: Dá acesso para mudar o tempo do mundo para dia ou noite.
+        description: Gives access to change the time of the world to day or night.
         default: op
     timehandler.weather.use:
-        description: Dá acesso para mudar o tempo do mundo para chuvoso ou calmo.
+        description: Gives access to change the weather in the world to rainy or calm.
         default: op
         

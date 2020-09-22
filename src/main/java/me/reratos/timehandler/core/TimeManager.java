@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
@@ -15,7 +14,10 @@ import me.reratos.timehandler.enums.MoonPhasesEnum;
 import me.reratos.timehandler.enums.ThunderEnum;
 import me.reratos.timehandler.enums.TimeEnum;
 import me.reratos.timehandler.enums.WeatherEnum;
+import me.reratos.timehandler.utils.Constants;
 import me.reratos.timehandler.utils.ConstantsConfig;
+import me.reratos.timehandler.utils.LocaleLoader;
+import me.reratos.timehandler.utils.Messages;
 
 public class TimeManager {
 	
@@ -27,7 +29,7 @@ public class TimeManager {
 		if(w != null) {
 			day(sender, w);
 		} else {
-			TimeHandler.sendMessage(sender, "This world does not exist!");
+			TimeHandler.sendMessageLogo(sender, LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 		}
 		
 		return true;
@@ -49,7 +51,7 @@ public class TimeManager {
 		if(w != null) {
 			night(sender, w);
 		} else {
-			TimeHandler.sendMessage(sender, "This world does not exist!");
+			TimeHandler.sendMessageLogo(sender, LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 		}
 		
 		return true;
@@ -71,7 +73,7 @@ public class TimeManager {
 		if(w != null) {
 			moonPhase(sender, moonPhase, w);
 		} else {
-			TimeHandler.sendMessage(sender, "This world does not exist!");
+			TimeHandler.sendMessageLogo(sender, LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 		}
 		
 		return true;
@@ -103,12 +105,10 @@ public class TimeManager {
 		
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			TimeHandler.broadcastMessage("The player " + ChatColor.BLUE + p.getDisplayName() + 
-					ChatColor.RESET + " changed the world time " + ChatColor.GREEN + world.getName() +
-					ChatColor.RESET + " to " + time);
+			TimeHandler.broadcastMessage(LocaleLoader.getString(Messages.WEATHER_PLAYER_SET_FOR, p.getDisplayName(), 
+					world.getName(), time));
 		} else {
-			TimeHandler.broadcastMessage("The server changed the world time " + ChatColor.GREEN + 
-					world.getName() + ChatColor.RESET + " to " + time);
+			TimeHandler.broadcastMessage(LocaleLoader.getString(Messages.WEATHER_PLAYER_SET_FOR, world.getName(), time));
 		}
 	}
 	
@@ -116,8 +116,8 @@ public class TimeManager {
 		WorldManager wm = runnablesWorld.get(worldName);
 		
 		if(wm == null) {
-			Object objDay = TimeHandler.config.get("day-begin-in");
-			Object objNight = TimeHandler.config.get("night-begin-in");
+			Object objDay = TimeHandler.config.get(ConstantsConfig.DAY_BEGIN_IN);
+			Object objNight = TimeHandler.config.get(ConstantsConfig.NIGHT_BEGIN_IN);
 			
 			if(objDay != null && objNight != null && 
 					(((int) objDay >= 22000 	&& (int) objDay <= 23999 ) || (int) objDay == 0 ) && 
@@ -137,11 +137,11 @@ public class TimeManager {
 						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS), 
 						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
 		} else {
-			TimeHandler.sendMessage("This world already has an open management instance.");
+			TimeHandler.sendMessage(LocaleLoader.getString(Messages.WORLD_OPEN_INSTANCE_MANAGEMENT));
 			return;
 		}
 
-		MemorySection worldsConfig = (MemorySection) TimeHandler.worldsConfig.get("worlds." + worldName);
+		MemorySection worldsConfig = (MemorySection) TimeHandler.worldsConfig.get(Constants.WORLDS_DOT + worldName);
 		LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldsConfig.getValues(true);
 
 		Object objAux;
