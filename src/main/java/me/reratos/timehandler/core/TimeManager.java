@@ -16,6 +16,7 @@ import me.reratos.timehandler.enums.TimeEnum;
 import me.reratos.timehandler.enums.WeatherEnum;
 import me.reratos.timehandler.utils.Constants;
 import me.reratos.timehandler.utils.ConstantsConfig;
+import me.reratos.timehandler.utils.ConstantsWorldsConfig;
 import me.reratos.timehandler.utils.LocaleLoader;
 import me.reratos.timehandler.utils.Messages;
 
@@ -145,39 +146,39 @@ public class TimeManager {
 		LinkedHashMap<String, Object> list = (LinkedHashMap<String, Object>) worldsConfig.getValues(true);
 
 		Object objAux;
-		
-		objAux = list.get("enabled");
+
+		objAux = list.get(ConstantsWorldsConfig.ENABLED);
 		wm.setEnabled(objAux == null ? false : objAux.equals(true));
 		
-		objAux = list.get("thunder");
+		objAux = list.get(ConstantsWorldsConfig.THUNDER);
 		try {
 			wm.setThunder(ThunderEnum.getEnumPorValue((String) objAux));
 		} catch (Exception e) {
 			wm.setThunder(ThunderEnum.DEFAULT);
 		}
 		
-		objAux = list.get("time");
+		objAux = list.get(ConstantsWorldsConfig.TIME);
 		try {
 			wm.setTime(TimeEnum.getEnumPorValue(objAux.toString()));
 		} catch (Exception e) {
 			wm.setTime(TimeEnum.DEFAULT);
 		}
 		
-		objAux = list.get("timeFixed");
+		objAux = list.get(ConstantsWorldsConfig.TIME_FIXED);
 		try {
 			wm.setTimeFixed((int) objAux);
 		} catch (Exception e) {
 			wm.setTimeFixed(0);
 		}
 		
-		objAux = list.get("weather");
+		objAux = list.get(ConstantsWorldsConfig.WEATHER);
 		try {
 			wm.setWeather(WeatherEnum.getEnumPorValue(objAux.toString()));
 		} catch (Exception e) {
 			wm.setWeather(WeatherEnum.DEFAULT);
 		}
 		
-		objAux = list.get("moonPhase");
+		objAux = list.get(ConstantsWorldsConfig.MOON_PHASE);
 		try {
 			wm.setMoonPhase(MoonPhasesEnum.DEFAULT);
 			for(MoonPhasesEnum moon : MoonPhasesEnum.values()) {
@@ -190,14 +191,14 @@ public class TimeManager {
 			wm.setMoonPhase(MoonPhasesEnum.DEFAULT);
 		}
 		
-		objAux = list.get("durationDay");
+		objAux = list.get(ConstantsWorldsConfig.DURATION_DAY);
 		try {
 			wm.setDurationDay((int) objAux);
 		} catch (Exception e) {
 			wm.setDurationDay(14000);
 		}
 		
-		objAux = list.get("durationNight");
+		objAux = list.get(ConstantsWorldsConfig.DURATION_NIGHT);
 		try {
 			wm.setDurationNight((int) objAux);
 		} catch (Exception e) {
