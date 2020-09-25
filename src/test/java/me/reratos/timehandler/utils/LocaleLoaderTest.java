@@ -1,6 +1,8 @@
 package me.reratos.timehandler.utils;
 
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -33,8 +35,14 @@ class LocaleLoaderTest {
 			fail("Não foi possivel pegar os campos.");
 		}
 		
+		assertNotNull(fields);
+		assertTrue(fields.length > 0);
+		
 		File file = new File("src/main/resources/lang/locale.properties");
 		FileInputStream fis = null;
+		
+		assertNotNull(file, "Arquivo locale padrão não encontrado!");
+		
 		try {
 			fis = new FileInputStream(file);
 		} catch (FileNotFoundException e1) {
@@ -81,6 +89,8 @@ class LocaleLoaderTest {
 		List<String> listValueField = new ArrayList<>();
 		List<String> listValueKey = new ArrayList<>();
 
+		assertNotNull(file, "Arquivo locale padrão não encontrado!");
+		
 		// Carrega o arquivo de mensagens e carrega na properties
 		try {
 			fis = new FileInputStream(file);
@@ -98,6 +108,9 @@ class LocaleLoaderTest {
 			e.printStackTrace();
 			fail("Não foi possivel pegar os campos!");
 		}
+
+		assertNotNull(fields);
+		assertTrue(fields.length > 0);
 		
 		// Insere todos os valores dos fields em uma lista
 		for(Field f : fields) {

@@ -10,19 +10,11 @@ import me.reratos.timehandler.enums.ThunderEnum;
 import me.reratos.timehandler.enums.TimeEnum;
 import me.reratos.timehandler.enums.WeatherEnum;
 import me.reratos.timehandler.utils.Constants;
+import me.reratos.timehandler.utils.ConstantsWorldsConfig;
 import me.reratos.timehandler.utils.LocaleLoader;
 import me.reratos.timehandler.utils.Messages;
 
 public class SetCommand {
-
-	private final static String enabled = 	"enabled";
-	private final static String weather = 	"weather";
-	private final static String thunder = 	"thunder";
-	private final static String time = 		"time";
-	private final static String timeFixed = "timeFixed";
-	private final static String durationDay = 	"durationDay";
-	private final static String durationNight = "durationNight";
-	private final static String moonPhase = 	"moonPhase";
 
 	private final static String optionDefault 	= "default";
 	private final static String optionRain 		= "rain";
@@ -67,35 +59,35 @@ public class SetCommand {
 //		time: 	 default/day/night/fixed/configured
 //		timeFixed: 	 0 - 24000
 		switch (property) {
-			case enabled:
+			case ConstantsWorldsConfig.ENABLED:
 				ret = commandSetEnabled(sender, worldManager, property, value);
 				break;
 			
-			case weather:
+			case ConstantsWorldsConfig.WEATHER:
 				ret = commandSetWeather(sender, worldManager, property, value);
 				break;
 				
-			case thunder:
+			case ConstantsWorldsConfig.THUNDER:
 				ret = commandSetThunder(sender, worldManager, property, value);
 				break;
 				
-			case time:
+			case ConstantsWorldsConfig.TIME:
 				ret = commandSetTime(sender, worldManager, property, value);
 				break;
 				
-			case timeFixed:
+			case ConstantsWorldsConfig.TIME_FIXED:
 				ret = commandSetTimeFixed(sender, worldManager, property, value);
 				break;
 				
-			case durationDay:
+			case ConstantsWorldsConfig.DURATION_DAY:
 				ret = commandSetDurationDay(sender, worldManager, property, value);
 				break;
 				
-			case durationNight:
+			case ConstantsWorldsConfig.DURATION_NIGHT:
 				ret = commandSetDurationNight(sender, worldManager, property, value);
 				break;
 				
-			case moonPhase:
+			case ConstantsWorldsConfig.MOON_PHASE:
 				ret = commandSetMoonPhase(sender, worldManager, property, value);
 				break;
 	

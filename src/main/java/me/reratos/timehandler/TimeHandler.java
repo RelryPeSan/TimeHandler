@@ -12,7 +12,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
 import com.google.common.base.Charsets;
 
@@ -35,6 +37,15 @@ public class TimeHandler extends JavaPlugin {
 	public static FileConfiguration config;
 	public static YamlConfiguration worldsConfig;
 	public File fileWorldsConfig;
+	
+	// Construtores para teste
+    public TimeHandler() {
+        super();
+    }
+
+    protected TimeHandler(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+    }
 	
 	@Override
 	public void onEnable() {
@@ -61,10 +72,7 @@ public class TimeHandler extends JavaPlugin {
 
 		Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 
-		CommandCompleter tabCompletion = new CommandCompleter();
-		getCommand(Constants.COMMAND_TIMEHANDLER).setTabCompleter(tabCompletion);
-		getCommand(Constants.COMMAND_TH).setTabCompleter(tabCompletion);
-		getCommand(Constants.COMMAND_MOON_PHASE).setTabCompleter(tabCompletion);
+		initializeTabCompleter();
 		
 		initializeTasks();
 		
@@ -252,6 +260,25 @@ public class TimeHandler extends JavaPlugin {
 
 	public static void broadcastMessage(String message) {
 		Bukkit.broadcastMessage(LocaleLoader.getString(Messages.TIMEHANDLER_LOGO, message));
+	}
+	
+	private void initializeTabCompleter() {
+		CommandCompleter tabCompletion = new CommandCompleter();
+
+		try {
+			getCommand(Constants.COMMAND_TIMEHANDLER).setTabCompleter(tabCompletion);
+		} catch (Exception e) {
+		}
+		
+		try {
+			getCommand(Constants.COMMAND_TH).setTabCompleter(tabCompletion);
+		} catch (Exception e) {
+		}
+		
+		try {
+			getCommand(Constants.COMMAND_MOON_PHASE).setTabCompleter(tabCompletion);
+		} catch (Exception e) {
+		}
 	}
 
 	private static void initializeTasks() {
