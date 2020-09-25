@@ -26,7 +26,7 @@ public final class LocaleLoader {
     	try {
     		message = formatString(message, params);
     	} catch (Exception e) {
-    		message = ChatColor.RED + "Error: Not found key '" + key + "'.\n" + e;
+//    		message = ChatColor.RED + "Error: Not found key '" + key + "'.\n" + e;
     		e.printStackTrace();
 		}
     	
@@ -56,8 +56,14 @@ public final class LocaleLoader {
     }
 
     public static void initialize() {
+    	initialize(TimeHandler.config.getString(ConstantsConfig.DEFAULT_LANGUAGE), 
+    			TimeHandler.plugin.getResource("lang/locale.properties"));
+    }
+
+    public static void initialize(String locString, InputStream inputResource) {
+
     	if(properties == null) {
-    		String ret = TimeHandler.config.getString(ConstantsConfig.DEFAULT_LANGUAGE);
+    		String ret = locString;
     		
     		if(ret == null) {
     			locale = new Locale("en", "US");
@@ -75,7 +81,7 @@ public final class LocaleLoader {
     		
     		Properties propertiesDefault = new Properties();
     		
-    		InputStream locInput = TimeHandler.plugin.getResource("lang/locale.properties");
+    		InputStream locInput = inputResource;
     		try {
     			propertiesDefault.load(locInput);
 				locInput.close();

@@ -6,14 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
 import com.google.common.base.Charsets;
 
@@ -36,6 +37,15 @@ public class TimeHandler extends JavaPlugin {
 	public static FileConfiguration config;
 	public static YamlConfiguration worldsConfig;
 	public File fileWorldsConfig;
+	
+	// Construtores para teste
+    public TimeHandler() {
+        super();
+    }
+
+    protected TimeHandler(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+    }
 	
 	@Override
 	public void onEnable() {
@@ -62,10 +72,7 @@ public class TimeHandler extends JavaPlugin {
 
 		Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
 
-		CommandCompleter tabCompletion = new CommandCompleter();
-		getCommand("timehandler").setTabCompleter(tabCompletion);
-		getCommand("th").setTabCompleter(tabCompletion);
-		getCommand("moonphase").setTabCompleter(tabCompletion);
+		initializeTabCompleter();
 		
 		initializeTasks();
 		
@@ -76,9 +83,9 @@ public class TimeHandler extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
 		switch (command.getName().toLowerCase()) {
-		case "timehandler":
-		case "th":
-			if (sender.hasPermission("timehandler.use")) {
+		case Constants.COMMAND_TIMEHANDLER:
+		case Constants.COMMAND_TH:
+			if (sender.hasPermission(Constants.PERMISSION_TIMEHANDLER_USE)) {
 
 				if (args.length == 0) {
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH));
@@ -86,7 +93,7 @@ public class TimeHandler extends JavaPlugin {
 				}
 
 				switch (args[0].toLowerCase()) {
-				case "help":
+				case Constants.COMMAND_TH_HELP:
 					if (args.length == 1) {
 						sendHeaderMessage(sender, args[0].toUpperCase());
 						return CommandHandler.help(sender);
@@ -97,7 +104,7 @@ public class TimeHandler extends JavaPlugin {
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH_FOR_COMMAND, args[0].toLowerCase()));
 					return false;
 
-				case "info":
+				case Constants.COMMAND_TH_INFO:
 					if(args.length == 1 && sender instanceof Player) {
 						sendHeaderMessage(sender, args[0].toUpperCase());
 						return CommandHandler.info(sender, ((Player)sender).getWorld());
@@ -109,7 +116,7 @@ public class TimeHandler extends JavaPlugin {
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH_FOR_COMMAND, args[0].toLowerCase()));
 					return false;
 
-				case "list":
+				case Constants.COMMAND_TH_LIST:
 					if (args.length != 1) {
 						command.setUsage(
 								Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
@@ -127,7 +134,7 @@ public class TimeHandler extends JavaPlugin {
 //							}
 //							return CommandHandler.remove(sender, args[1]);
 
-				case "set":
+				case Constants.COMMAND_TH_SET:
 					if (args.length == 2) {
 						sendHeaderMessage(sender, args[0].toUpperCase());
 						return CommandHandler.set(sender, args[1]);
@@ -140,7 +147,7 @@ public class TimeHandler extends JavaPlugin {
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH_FOR_COMMAND, args[0].toLowerCase()));
 					return false;
 
-				case "update":
+				case Constants.COMMAND_TH_UPDATE:
 					sendHeaderMessage(sender, args[0].toUpperCase());
 					return CommandHandler.update(sender, Constants.RESOURCE_ID);
 
@@ -155,8 +162,8 @@ public class TimeHandler extends JavaPlugin {
 			}
 			break;
 
-		case "day":
-		case "thd":
+		case Constants.COMMAND_DAY:
+		case Constants.COMMAND_THD:
 			if (args.length == 0 && sender instanceof Player) {
 				return TimeManager.day(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
@@ -165,8 +172,8 @@ public class TimeHandler extends JavaPlugin {
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			return false;
 
-		case "night":
-		case "thn":
+		case Constants.COMMAND_NIGHT:
+		case Constants.COMMAND_THN:
 			if (args.length == 0 && sender instanceof Player) {
 				return TimeManager.night(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
@@ -175,8 +182,8 @@ public class TimeHandler extends JavaPlugin {
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			return false;
 
-		case "moonphase":
-		case "thmp":
+		case Constants.COMMAND_MOON_PHASE:
+		case Constants.COMMAND_THMP:
 			if (args.length == 1 && sender instanceof Player) {
 				return TimeManager.moonPhase(sender, MoonPhasesEnum.getEnumPorValue(args[0]),
 						((Player) sender).getWorld());
@@ -186,8 +193,8 @@ public class TimeHandler extends JavaPlugin {
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			return false;
 
-		case "rain":
-		case "thr":
+		case Constants.COMMAND_RAIN:
+		case Constants.COMMAND_THR:
 			if (args.length == 0 && sender instanceof Player) {
 				return WeatherManager.rain(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
@@ -196,8 +203,8 @@ public class TimeHandler extends JavaPlugin {
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			break;
 
-		case "thundering":
-		case "tht":
+		case Constants.COMMAND_THUNDERING:
+		case Constants.COMMAND_THT:
 			if (args.length == 0 && sender instanceof Player) {
 				return WeatherManager.thundering(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
@@ -205,8 +212,8 @@ public class TimeHandler extends JavaPlugin {
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			break;
-		case "calm":
-		case "thc":
+		case Constants.COMMAND_CALM:
+		case Constants.COMMAND_THC:
 			if (args.length == 0 && sender instanceof Player) {
 				return WeatherManager.calm(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
@@ -240,7 +247,7 @@ public class TimeHandler extends JavaPlugin {
 	}
 
 	public static void sendMessage(String message) {
-		Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "[TimeHandler] " + ChatColor.RESET + message);
+		Bukkit.getConsoleSender().sendMessage(LocaleLoader.getString(Messages.TIMEHANDLER_LOGO, message));
 	}
 
 	public static void sendMessageLogo(CommandSender sender, String message) {
@@ -253,6 +260,25 @@ public class TimeHandler extends JavaPlugin {
 
 	public static void broadcastMessage(String message) {
 		Bukkit.broadcastMessage(LocaleLoader.getString(Messages.TIMEHANDLER_LOGO, message));
+	}
+	
+	private void initializeTabCompleter() {
+		CommandCompleter tabCompletion = new CommandCompleter();
+
+		try {
+			getCommand(Constants.COMMAND_TIMEHANDLER).setTabCompleter(tabCompletion);
+		} catch (Exception e) {
+		}
+		
+		try {
+			getCommand(Constants.COMMAND_TH).setTabCompleter(tabCompletion);
+		} catch (Exception e) {
+		}
+		
+		try {
+			getCommand(Constants.COMMAND_MOON_PHASE).setTabCompleter(tabCompletion);
+		} catch (Exception e) {
+		}
 	}
 
 	private static void initializeTasks() {
