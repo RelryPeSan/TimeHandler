@@ -136,10 +136,6 @@ public class TimeManager {
 			Bukkit.getScheduler().runTaskTimer(TimeHandler.plugin, wm, 
 					TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS), 
 					TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
-//			Bukkit.getScheduler()
-//				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 
-//						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS), 
-//						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
 		} else {
 			TimeHandler.sendMessage(LocaleLoader.getString(Messages.WORLD_OPEN_INSTANCE_MANAGEMENT));
 			return;

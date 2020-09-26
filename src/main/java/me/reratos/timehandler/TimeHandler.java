@@ -98,7 +98,6 @@ public class TimeHandler extends JavaPlugin {
 						sendHeaderMessage(sender, args[0].toUpperCase());
 						return CommandHandler.help(sender);
 					}
-//	                    	TimeHandler.sendMessage(sender, "Help em desenvolvimento!");
 					command.setUsage(
 							Bukkit.getPluginCommand(command.getName() + " " + args[0].toLowerCase()).getUsage());
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH_FOR_COMMAND, args[0].toLowerCase()));
@@ -152,7 +151,6 @@ public class TimeHandler extends JavaPlugin {
 					return CommandHandler.update(sender, Constants.RESOURCE_ID);
 
 				default:
-//							command.setUsage(Bukkit.getPluginCommand(command.getName()).getUsage());
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH));
 					return true;
 				}
@@ -170,7 +168,7 @@ public class TimeHandler extends JavaPlugin {
 				return TimeManager.day(sender, args[0]);
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
-			return false;
+			break;
 
 		case Constants.COMMAND_NIGHT:
 		case Constants.COMMAND_THN:
@@ -180,7 +178,7 @@ public class TimeHandler extends JavaPlugin {
 				return TimeManager.night(sender, args[0]);
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
-			return false;
+			break;
 
 		case Constants.COMMAND_MOON_PHASE:
 		case Constants.COMMAND_THMP:
@@ -191,7 +189,7 @@ public class TimeHandler extends JavaPlugin {
 				return TimeManager.moonPhase(sender, MoonPhasesEnum.getEnumPorValue(args[0]), args[1]);
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
-			return false;
+			break;
 
 		case Constants.COMMAND_RAIN:
 		case Constants.COMMAND_THR:
@@ -212,6 +210,7 @@ public class TimeHandler extends JavaPlugin {
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			break;
+			
 		case Constants.COMMAND_CALM:
 		case Constants.COMMAND_THC:
 			if (args.length == 0 && sender instanceof Player) {

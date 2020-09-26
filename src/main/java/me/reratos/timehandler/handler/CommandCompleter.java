@@ -1,10 +1,9 @@
 package me.reratos.timehandler.handler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,40 +12,34 @@ import org.bukkit.util.StringUtil;
 
 import me.reratos.timehandler.handler.completer.MoonPhaseCompleter;
 import me.reratos.timehandler.handler.completer.SetCompleter;
+import me.reratos.timehandler.utils.Constants;
 
 public class CommandCompleter implements TabCompleter{
-	private static final Set<String> ACTIONS = new HashSet<String>();
 
 	@Override 
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] params) {
 		List<String> completions = new ArrayList<String>();
-		ACTIONS.add("help");
-		ACTIONS.add("info");
-		ACTIONS.add("list");
-//		ACTIONS.add("remove");
-		ACTIONS.add("set");
-		ACTIONS.add("update");
 
-		final Iterable<String> ac = ACTIONS;
+		final Iterable<String> ac = Arrays.asList(Constants.COMMAND_TH_HELP, Constants.COMMAND_TH_INFO,
+				Constants.COMMAND_TH_LIST, Constants.COMMAND_TH_SET, Constants.COMMAND_TH_UPDATE);
 		
 		// arg2 é o comando
 		// arg3[i] são os parametros
 		switch (label.toLowerCase()) {
-		case "timehandler":
-		case "th":
+		case Constants.COMMAND_TIMEHANDLER:
+		case Constants.COMMAND_TH:
 			if(params.length == 1) {
 				StringUtil.copyPartialMatches(params[0], ac, completions);				
 			} else {
 				switch (params[0].toLowerCase()) {
-				case "info":
+				case Constants.COMMAND_TH_INFO:
 					if(params.length == 2) {
 						StringUtil.copyPartialMatches(params[1], CommandHandler.getWorldsTimeHandler(), completions);
 					}
 					break;
 					
-				case "set":
+				case Constants.COMMAND_TH_SET:
 					SetCompleter.completer(command, label, params, completions);
-//					StringUtil.copyPartialMatches(params[1], CommandHandler.getWorldsTimeHandler(), completions);
 					break;
 
 				default:
@@ -56,7 +49,7 @@ public class CommandCompleter implements TabCompleter{
 			Collections.sort(completions);
 			return completions;
 
-		case "moonphase":
+		case Constants.COMMAND_MOON_PHASE:
 			MoonPhaseCompleter.completer(command, label, params, completions);
 			break;
 			
