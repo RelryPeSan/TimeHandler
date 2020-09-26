@@ -34,7 +34,7 @@ public class WeatherManager {
 		World w = Bukkit.getWorld(worldName);
 		
 		if(w != null) {
-			rain(sender, w);
+			thundering(sender, w);
 		} else {
 			TimeHandler.sendMessageLogo(sender, LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 		}
