@@ -1,5 +1,5 @@
 name: TimeHandler
-version: 1.4.1-beta
+version: 1.4.2-beta
 main: me.reratos.timehandler.TimeHandler
 author: Relry
 database: false
@@ -49,7 +49,7 @@ commands:
         aliases: [thn]
         permission: timehandler.time.use
         usage: /night [world]
-    moonPhase:
+    moonphase:
         description: Command to set phase of the moon.
         aliases: [thmp]
         permission: timehandler.weather.use

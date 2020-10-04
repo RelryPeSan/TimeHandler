@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.WorldMock;
+import be.seeseemelk.mockbukkit.scheduler.AsyncTaskException;
 import me.reratos.timehandler.TimeHandler;
 import me.reratos.timehandler.core.WorldManager;
 import me.reratos.timehandler.enums.MoonPhasesEnum;
@@ -29,10 +30,12 @@ class SetCommandsTest {
 	private static ServerMock server;
 	private static WorldMock wMock;
 	private static WorldManager worldManager;
+//	private static TimeHandler timeHandler;
 	
 	@BeforeAll
 	public static void setUp() {
 	    server = MockBukkit.mock();
+//	    timeHandler = MockBukkit.load(TimeHandler.class);
 	    MockBukkit.load(TimeHandler.class);
 	    
 	    wMock = new WorldMock();
@@ -44,7 +47,11 @@ class SetCommandsTest {
 
 	@AfterAll
 	public static void tearDown() {
-	    MockBukkit.unmock();
+		try {
+			MockBukkit.unmock();
+		} catch (AsyncTaskException e) {
+			// TODO: handle exception
+		}
 	}
 	
 	@Test

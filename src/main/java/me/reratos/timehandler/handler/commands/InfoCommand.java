@@ -34,7 +34,7 @@ public class InfoCommand {
         	String status = (wm.getWorld() == null ? 
         			ChatColor.RED + LocaleLoader.getString(Messages.STATUS_ERROR_RUNNING) : 
         				(wm.isEnabled() ? ChatColor.GREEN + LocaleLoader.getString(Messages.STATUS_RUNNING) : 
-        					ChatColor.RED + LocaleLoader.getString(Messages.STATUS_OFF)));
+        					ChatColor.RED + LocaleLoader.getString(Messages.STATUS_OFF))); 
         	
         	sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_INFO_WORLD_NAME_STATUS, worldName, status));
         	
@@ -50,7 +50,7 @@ public class InfoCommand {
 
         	String climaAtual = WeatherManager.getClimaAtual(world);
         	sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_INFO_CURRENT_WEATHER_CHANGED_IN, climaAtual, 
-        			world.getWeatherDuration()));
+        			( world.isThundering() ? world.getThunderDuration() : world.getWeatherDuration() )));
         	
         	// Lista as informações de ambiente do mundo
         	listInfo(sender, worldName, list);

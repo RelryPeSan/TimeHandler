@@ -85,7 +85,7 @@ public class TimeHandler extends JavaPlugin {
 		switch (command.getName().toLowerCase()) {
 		case Constants.COMMAND_TIMEHANDLER:
 		case Constants.COMMAND_TH:
-			if (sender.hasPermission(Constants.PERMISSION_TIMEHANDLER_USE)) {
+//			if (sender.hasPermission(Constants.PERMISSION_TIMEHANDLER_USE)) {
 
 				if (args.length == 0) {
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH));
@@ -152,13 +152,13 @@ public class TimeHandler extends JavaPlugin {
 
 				default:
 					sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_TH));
-					return true;
+					return false;
 				}
 
-			} else {
-				sendMessageLogo(sender, LocaleLoader.getString(Messages.NOT_PERMISSION_DEFAULT));
-			}
-			break;
+//			} else {
+//				sendMessageLogo(sender, LocaleLoader.getString(Messages.NOT_PERMISSION_DEFAULT));
+//			}
+//			break;
 
 		case Constants.COMMAND_DAY:
 		case Constants.COMMAND_THD:
@@ -197,6 +197,8 @@ public class TimeHandler extends JavaPlugin {
 				return WeatherManager.rain(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
 				return WeatherManager.rain(sender, args[0]);
+			} else if (args.length == 2) {
+				return WeatherManager.rain(sender, args[0], args[1]);
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			break;
@@ -207,6 +209,8 @@ public class TimeHandler extends JavaPlugin {
 				return WeatherManager.thundering(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
 				return WeatherManager.thundering(sender, args[0]);
+			} else if (args.length == 2) {
+				return WeatherManager.thundering(sender, args[0], args[1]);
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			break;
@@ -217,6 +221,8 @@ public class TimeHandler extends JavaPlugin {
 				return WeatherManager.calm(sender, ((Player) sender).getWorld());
 			} else if (args.length == 1) {
 				return WeatherManager.calm(sender, args[0]);
+			} else if (args.length == 2) {
+				return WeatherManager.calm(sender, args[0], args[1]);
 			}
 			sendMessageLogo(sender, LocaleLoader.getString(Messages.HELP_DEFAULT_FOR_COMMAND, command.getName()));
 			break;
@@ -264,20 +270,16 @@ public class TimeHandler extends JavaPlugin {
 	private void initializeTabCompleter() {
 		CommandCompleter tabCompletion = new CommandCompleter();
 
-		try {
-			getCommand(Constants.COMMAND_TIMEHANDLER).setTabCompleter(tabCompletion);
-		} catch (Exception e) {
-		}
+		getCommand(Constants.COMMAND_TIMEHANDLER).setTabCompleter(tabCompletion);
+		getCommand(Constants.COMMAND_MOON_PHASE).setTabCompleter(tabCompletion);
+		getCommand(Constants.COMMAND_RAIN).setTabCompleter(tabCompletion);
+		getCommand(Constants.COMMAND_CALM).setTabCompleter(tabCompletion);
+		getCommand(Constants.COMMAND_THUNDERING).setTabCompleter(tabCompletion);
 		
-		try {
-			getCommand(Constants.COMMAND_TH).setTabCompleter(tabCompletion);
-		} catch (Exception e) {
-		}
-		
-		try {
-			getCommand(Constants.COMMAND_MOON_PHASE).setTabCompleter(tabCompletion);
-		} catch (Exception e) {
-		}
+//		try {
+//			getCommand(Constants.COMMAND_TH).setTabCompleter(tabCompletion);
+//		} catch (Exception e) {
+//		}
 	}
 
 	private static void initializeTasks() {

@@ -47,13 +47,13 @@ public class HelpCommand {
 
 		if(sender.hasPermission("timehandler.weather.use")) {
 			cmd = TimeHandler.plugin.getCommand("calm");
-			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world] [duration]");
 			
 			cmd = TimeHandler.plugin.getCommand("rain");
-			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world] [duration]");
 			
 			cmd = TimeHandler.plugin.getCommand("thundering");
-			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world]");
+			sender.sendMessage("/" + cmd.getName() + ChatColor.GREEN + " [world] [duration]");
 		}
 		
 		return true;

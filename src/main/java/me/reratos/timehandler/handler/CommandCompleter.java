@@ -12,6 +12,7 @@ import org.bukkit.util.StringUtil;
 
 import me.reratos.timehandler.handler.completer.MoonPhaseCompleter;
 import me.reratos.timehandler.handler.completer.SetCompleter;
+import me.reratos.timehandler.handler.completer.ShortWeatherCompleter;
 import me.reratos.timehandler.utils.Constants;
 
 public class CommandCompleter implements TabCompleter{
@@ -51,6 +52,12 @@ public class CommandCompleter implements TabCompleter{
 
 		case Constants.COMMAND_MOON_PHASE:
 			MoonPhaseCompleter.completer(command, label, params, completions);
+			break;
+			
+		case Constants.COMMAND_RAIN:
+		case Constants.COMMAND_CALM:
+		case Constants.COMMAND_THUNDERING:
+			ShortWeatherCompleter.completer(command, label, params, completions);
 			break;
 			
 		default:

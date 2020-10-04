@@ -72,12 +72,12 @@ public class TimeManager {
 		World w = Bukkit.getWorld(worldName);
 		
 		if(w != null) {
-			moonPhase(sender, moonPhase, w);
+			return moonPhase(sender, moonPhase, w);
 		} else {
 			TimeHandler.sendMessageLogo(sender, LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 		}
 		
-		return true;
+		return false;
 	}
 	
 	public static boolean moonPhase(CommandSender sender, MoonPhasesEnum moonPhase, World world) {
