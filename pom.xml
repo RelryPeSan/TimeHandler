@@ -8,6 +8,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<spigotmc.version>1.16.2-R0.1-SNAPSHOT</spigotmc.version>
+		<sonar.projectKey>RelryPeSan_TimeHandler</sonar.projectKey>
+		<sonar.organization>relrypesan</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	
 	<build>
@@ -35,6 +38,14 @@
 	                <target>1.8</target>
 	            </configuration>
 	        </plugin>
+	        
+	        <plugin>
+		        <groupId>org.sonarsource.scanner.maven</groupId>
+		        <artifactId>sonar-maven-plugin</artifactId>
+		        <configuration>
+		          <goalPrefix>sonar</goalPrefix>
+		        </configuration>
+			</plugin>
 		</plugins>
 	</build>
   
