@@ -21,6 +21,7 @@ import com.google.common.base.Charsets;
 import me.reratos.timehandler.core.TimeManager;
 import me.reratos.timehandler.core.WeatherManager;
 import me.reratos.timehandler.enums.MoonPhasesEnum;
+import me.reratos.timehandler.events.PlayerListener;
 import me.reratos.timehandler.events.WorldListener;
 import me.reratos.timehandler.handler.CommandCompleter;
 import me.reratos.timehandler.handler.CommandHandler;
@@ -70,10 +71,8 @@ public class TimeHandler extends JavaPlugin {
 			lastVersionPlugin();
 		}
 
-		Bukkit.getPluginManager().registerEvents(new WorldListener(), this);
-
 		initializeTabCompleter();
-		
+		initializeListeners();
 		initializeTasks();
 		
 		sendMessage(LocaleLoader.getString(Messages.TIMEHANDLER_ENABLED));
@@ -281,8 +280,13 @@ public class TimeHandler extends JavaPlugin {
 //		} catch (Exception e) {
 //		}
 	}
+	
+	private void initializeListeners() {
+		Bukkit.getPluginManager().registerEvents(new PlayerListener(), plugin);
+		Bukkit.getPluginManager().registerEvents(new WorldListener(), plugin);
+	}
 
-	private static void initializeTasks() {
+	private void initializeTasks() {
 		for (String worldName : CommandHandler.getWorldsTimeHandler()) {
 			TimeManager.initTask(worldName);
 		}

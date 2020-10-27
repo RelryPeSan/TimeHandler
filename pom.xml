@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.reratos.timehandler</groupId>
 	<artifactId>TimeHandler</artifactId>
-	<version>1.4.2-beta</version>
+	<version>1.4.3-beta</version>
 	
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -63,19 +63,20 @@
 			<scope>provided</scope>
 		</dependency>-->
 		
+		<!-- https://mvnrepository.com/artifact/org.easymock/easymock -->
 		<dependency>
-			<groupId>org.easymock</groupId>
-			<artifactId>easymock</artifactId>
-			<version>3.2</version>
-			<scope>test</scope>
+		    <groupId>org.easymock</groupId>
+		    <artifactId>easymock</artifactId>
+		    <version>4.2</version>
+		    <scope>test</scope>
 		</dependency>
 		
-		<!-- MockBukkit -->
+		<!-- https://mvnrepository.com/artifact/com.github.seeseemelk/MockBukkit-v1.16 -->
 		<dependency>
-			<groupId>com.github.seeseemelk</groupId>
-			<artifactId>MockBukkit-v1.16</artifactId>
-			<version>0.5.0</version>
-			<scope>test</scope>
+		    <groupId>com.github.seeseemelk</groupId>
+		    <artifactId>MockBukkit-v1.16</artifactId>
+		    <version>0.13.0</version>
+		    <scope>test</scope>
 		</dependency>
 		
 	</dependencies>
