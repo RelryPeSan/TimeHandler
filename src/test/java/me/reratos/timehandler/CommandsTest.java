@@ -9,13 +9,8 @@ import java.util.Set;
 
 import org.bukkit.World;
 import org.bukkit.command.Command;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
@@ -36,7 +31,7 @@ class CommandsTest {
 	@BeforeAll
 	public static void setUp() {
 	    server = MockBukkit.mock();
-	    timeHandler = (TimeHandler) MockBukkit.load(TimeHandler.class);
+	    timeHandler = MockBukkit.load(TimeHandler.class);
 	    
 	    wMock = new WorldMock();
 	    wMock.setName("test");
@@ -48,33 +43,35 @@ class CommandsTest {
 	public static void tearDown() {
 		try {
 			MockBukkit.unmock();
-		} catch (AsyncTaskException e) {
+		} catch (AsyncTaskException ignored) {
 		}
 	}
 
 	/* ==== TEST /TIMEHANDLER HELP ==== */
-	@Test
-	@Disabled ("Unimplemented hasPermission")
-	void testCommandTimehandlerHelp_ServerArgs_1() {
-		boolean condition = false;
-		String label = "timehandler";
-		String args[] = {"help"};
-		Command command = server.getPluginCommand(label);
-		
-		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
-		
-		assertTrue(condition);
-	}
+//	@Test
+//	@Disabled ("Unimplemented hasPermission")
+//	void testCommandTimehandlerHelp_ServerArgs_1() {
+//		boolean condition;
+//		String label = "timehandler";
+//		String[] args = {"help"};
+//		Command command = server.getPluginCommand(label);
+//
+//		assert command != null;
+//		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
+//
+//		assertTrue(condition);
+//	}
 
 	/* ==== TEST /TIMEHANDLER INFO ==== */
 	@Test
 	void testCommandTimehandlerInfo_PlayerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
 		Command command = server.getPluginCommand(label);
 		PlayerMock pMock = new PlayerMock(server, "player");
-		String args[] = {"info"};
-		
+		String[] args = {"info"};
+
+		assert command != null;
 		condition = timeHandler.onCommand(pMock, command, label, args);
 		
 		assertTrue(condition);
@@ -82,11 +79,12 @@ class CommandsTest {
 
 	@Test
 	void testCommandTimehandlerInfo_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"info"};
+		String[] args = {"info"};
 		Command command = server.getPluginCommand(label);
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -94,11 +92,12 @@ class CommandsTest {
 
 	@Test
 	void testCommandTimehandlerInfo_ServerArgs_2() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"info", "test"};
+		String[] args = {"info", "test"};
 		Command command = server.getPluginCommand(label);
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -107,11 +106,12 @@ class CommandsTest {
 	/* ==== TEST /TIMEHANDLER LIST ==== */
 	@Test
 	void testCommandTimehandlerList_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"list"};
+		String[] args = {"list"};
 		Command command = server.getPluginCommand(label);
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -119,11 +119,12 @@ class CommandsTest {
 
 	@Test
 	void testCommandTimehandlerList_ServerArgs_2() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"list", "test"};
+		String[] args = {"list", "test"};
 		Command command = server.getPluginCommand(label);
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -133,11 +134,12 @@ class CommandsTest {
 	@Test
 	@Order(1)
 	void testCommandTimehandlerSet_ServerArgs_2() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"set", "test"};
+		String[] args = {"set", "test"};
 		Command command = server.getPluginCommand(label);
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -145,11 +147,12 @@ class CommandsTest {
 
 	@Test
 	void testCommandTimehandlerSet_ServerArgs_4() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"set", "test", "enabled", "false"};
+		String[] args = {"set", "test", "enabled", "false"};
 		Command command = server.getPluginCommand(label);
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -162,11 +165,12 @@ class CommandsTest {
 
 	@Test
 	void testCommandTimehandlerSet_ServerArgs_3() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"set", "test", "enabled"};
+		String[] args = {"set", "test", "enabled"};
 		Command command = server.getPluginCommand(label);
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -175,11 +179,12 @@ class CommandsTest {
 	/* ==== TEST /TIMEHANDLER UPDATE ==== */
 	@Test
 	void testCommandTimehandlerUpdate_ServerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"update"};
+		String[] args = {"update"};
 		Command command = server.getPluginCommand(label);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -188,11 +193,12 @@ class CommandsTest {
 	/* ==== TEST /TIMEHANDLER ANYTHING ==== */
 	@Test
 	void testCommandTimehandlerAnything_ServerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "timehandler";
-		String args[] = {"testErro"};
+		String[] args = {"testErro"};
 		Command command = server.getPluginCommand(label);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -201,11 +207,12 @@ class CommandsTest {
 	/* ==== TEST /DAY ==== */
 	@Test
 	void testCommandDay_ServerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "day";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -213,15 +220,16 @@ class CommandsTest {
 
 	@Test
 	void testCommandDay_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "day";
-		String args[] = {"test"};
+		String[] args = {"test"};
 		Command command = server.getPluginCommand(label);
 		
 		wMock.setTime(18000);
 
 		assertEquals(wMock.getTime(), 18000);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -230,9 +238,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandDay_PlayerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "day";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		PlayerMock pMock = new PlayerMock(server, "player");
 		World world = pMock.getWorld();
@@ -241,6 +249,7 @@ class CommandsTest {
 
 		assertEquals(world.getTime(), 18000);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(pMock, command, label, args);
 		
 		assertTrue(condition);
@@ -250,11 +259,12 @@ class CommandsTest {
 	/* ==== TEST /NIGHT ==== */
 	@Test
 	void testCommandNight_ServerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "night";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -262,15 +272,16 @@ class CommandsTest {
 
 	@Test
 	void testCommandNight_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "night";
-		String args[] = {"test"};
+		String[] args = {"test"};
 		Command command = server.getPluginCommand(label);
 		
 		wMock.setTime(6000);
 
 		assertEquals(wMock.getTime(), 6000);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -279,9 +290,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandNight_PlayerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "night";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		PlayerMock pMock = new PlayerMock(server, "player");
 		World world = pMock.getWorld();
@@ -290,6 +301,7 @@ class CommandsTest {
 		
 		assertEquals(world.getTime(), 6000);
 		
+		assert command != null;
 		condition = timeHandler.onCommand(pMock, command, label, args);
 		
 		assertTrue(condition);
@@ -299,7 +311,7 @@ class CommandsTest {
 	/* ==== TEST /MOONPHASE ==== */
 	@Test
 	void testCommandMoonPhase_PlayerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "moonphase";
 		Set<String> phases = MoonPhasesEnum.getList();
 		Command command = server.getPluginCommand(label);
@@ -307,7 +319,8 @@ class CommandsTest {
 		World world = pMock.getWorld();
 
 		for(String p : phases) {
-			String args[] = {p};
+			String[] args = {p};
+			assert command != null;
 			condition = timeHandler.onCommand(pMock, command, label, args);
 			
 			if(MoonPhasesEnum.getEnumPorValue(p) == MoonPhasesEnum.DEFAULT) {
@@ -325,7 +338,8 @@ class CommandsTest {
 			assertEquals(expected, actual);
 		}
 
-		String aux[] = {"testeErro"};
+		String[] aux = {"testeErro"};
+		assert command != null;
 		condition = timeHandler.onCommand(pMock, command, label, aux);
 		assertFalse(condition);
 		
@@ -333,15 +347,16 @@ class CommandsTest {
 
 	@Test
 	void testCommandMoonPhase_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "moonphase";
 		Command command = server.getPluginCommand(label);
 
-		String testeErro[] = {"testeErro"};
+		String[] testeErro = {"testeErro"};
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, testeErro);
 		assertFalse(condition);
 		
-		String testeTest[] = {"test"};
+		String[] testeTest = {"test"};
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, testeTest);
 		assertFalse(condition);
 		
@@ -349,13 +364,14 @@ class CommandsTest {
 
 	@Test
 	void testCommandMoonPhase_ServerArgs_2() {
-		boolean condition = false;
+		boolean condition;
 		String label = "moonphase";
 		Set<String> phases = MoonPhasesEnum.getList();
 		Command command = server.getPluginCommand(label);
 
 		for(String p : phases) {
-			String args[] = {p, "test"};
+			String[] args = {p, "test"};
+			assert command != null;
 			condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 			
 			if(MoonPhasesEnum.getEnumPorValue(p) == MoonPhasesEnum.DEFAULT) {
@@ -373,7 +389,8 @@ class CommandsTest {
 			assertEquals(expected, actual);
 		}
 
-		String aux[] = {"testeErro", "test"};
+		String[] aux = {"testeErro", "test"};
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, aux);
 		assertFalse(condition);
 		
@@ -382,9 +399,9 @@ class CommandsTest {
 	/* ==== TEST /RAIN ==== */
 	@Test
 	void testCommandRain_ServerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "rain";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		
 		wMock.setStorm(false);
@@ -392,7 +409,8 @@ class CommandsTest {
 		
 		assertFalse(wMock.hasStorm());
 		assertFalse(wMock.isThundering());
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -400,9 +418,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandRain_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "rain";
-		String args[] = {"test"};
+		String[] args = {"test"};
 		Command command = server.getPluginCommand(label);
 
 		wMock.setStorm(false);
@@ -410,7 +428,8 @@ class CommandsTest {
 		
 		assertFalse(wMock.hasStorm());
 		assertFalse(wMock.isThundering());
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -421,9 +440,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandRain_ServerArgs_2() {
-		boolean condition = false;
+		boolean condition;
 		String label = "rain";
-		String args[] = {"test", "20000"};
+		String[] args = {"test", "20000"};
 		Command command = server.getPluginCommand(label);
 
 		wMock.setStorm(false);
@@ -431,21 +450,22 @@ class CommandsTest {
 		
 		assertFalse(wMock.hasStorm());
 		assertFalse(wMock.isThundering());
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
 		
 		assertTrue(wMock.hasStorm());
-		assertTrue(wMock.getWeatherDuration() == 20000);
+		assertEquals(wMock.getWeatherDuration(), 20000);
 		assertFalse(wMock.isThundering());
 	}
 
 	@Test
 	void testCommandRain_PlayerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "rain";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		PlayerMock pMock = new PlayerMock(server, "player");
 		World world = pMock.getWorld();
@@ -455,7 +475,8 @@ class CommandsTest {
 		
 		assertFalse(world.hasStorm());
 		assertFalse(world.isThundering());
-		
+
+		assert command != null;
 		condition = timeHandler.onCommand(pMock, command, label, args);
 		
 		assertTrue(condition);
@@ -467,9 +488,9 @@ class CommandsTest {
 	/* ==== TEST /THUNDERING ==== */
 	@Test
 	void testCommandThundering_ServerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "thundering";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		
 		wMock.setStorm(false);
@@ -478,6 +499,7 @@ class CommandsTest {
 		assertFalse(wMock.hasStorm());
 		assertFalse(wMock.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -485,9 +507,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandThundering_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "thundering";
-		String args[] = {"test"};
+		String[] args = {"test"};
 		Command command = server.getPluginCommand(label);
 
 		wMock.setStorm(false);
@@ -496,6 +518,7 @@ class CommandsTest {
 		assertFalse(wMock.hasStorm());
 		assertFalse(wMock.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -506,9 +529,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandThundering_ServerArgs_2() {
-		boolean condition = false;
+		boolean condition;
 		String label = "thundering";
-		String args[] = {"test", "15000"};
+		String[] args = {"test", "15000"};
 		Command command = server.getPluginCommand(label);
 
 		wMock.setStorm(false);
@@ -517,20 +540,21 @@ class CommandsTest {
 		assertFalse(wMock.hasStorm());
 		assertFalse(wMock.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
 		
 		assertTrue(wMock.hasStorm());
 		assertTrue(wMock.isThundering());
-		assertTrue(wMock.getThunderDuration() == 15000);
+		assertEquals(wMock.getThunderDuration(), 15000);
 	}
 
 	@Test
 	void testCommandThundering_PlayerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "thundering";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		PlayerMock pMock = new PlayerMock(server, "player");
 		World world = pMock.getWorld();
@@ -541,6 +565,7 @@ class CommandsTest {
 		assertFalse(world.hasStorm());
 		assertFalse(world.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(pMock, command, label, args);
 		
 		assertTrue(condition);
@@ -552,9 +577,9 @@ class CommandsTest {
 	/* ==== TEST /CALM ==== */
 	@Test
 	void testCommandCalm_ServerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "calm";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		
 		wMock.setStorm(true);
@@ -563,6 +588,7 @@ class CommandsTest {
 		assertTrue(wMock.hasStorm());
 		assertTrue(wMock.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertFalse(condition);
@@ -570,9 +596,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandCalm_ServerArgs_1() {
-		boolean condition = false;
+		boolean condition;
 		String label = "calm";
-		String args[] = {"test"};
+		String[] args = {"test"};
 		Command command = server.getPluginCommand(label);
 
 		wMock.setStorm(true);
@@ -581,6 +607,7 @@ class CommandsTest {
 		assertTrue(wMock.hasStorm());
 		assertTrue(wMock.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
@@ -591,9 +618,9 @@ class CommandsTest {
 
 	@Test
 	void testCommandCalm_ServerArgs_2() {
-		boolean condition = false;
+		boolean condition;
 		String label = "calm";
-		String args[] = {"test", "30000"};
+		String[] args = {"test", "30000"};
 		Command command = server.getPluginCommand(label);
 
 		wMock.setStorm(true);
@@ -602,20 +629,21 @@ class CommandsTest {
 		assertTrue(wMock.hasStorm());
 		assertTrue(wMock.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
 		
 		assertTrue(condition);
 
 		assertFalse(wMock.hasStorm());
 		assertFalse(wMock.isThundering());
-		assertTrue(wMock.getWeatherDuration() == 30000);
+		assertEquals(wMock.getWeatherDuration(), 30000);
 	}
 
 	@Test
 	void testCommandCalm_PlayerArgs_0() {
-		boolean condition = false;
+		boolean condition;
 		String label = "calm";
-		String args[] = {};
+		String[] args = {};
 		Command command = server.getPluginCommand(label);
 		PlayerMock pMock = new PlayerMock(server, "player");
 		World world = pMock.getWorld();
@@ -626,6 +654,7 @@ class CommandsTest {
 		assertTrue(wMock.hasStorm());
 		assertTrue(wMock.isThundering());
 		
+		assert command != null;
 		condition = timeHandler.onCommand(pMock, command, label, args);
 		
 		assertTrue(condition);
