@@ -28,7 +28,6 @@ import me.reratos.timehandler.utils.ConstantsWorldsConfig;
 class SetCommandsTest {
 	
 	private static ServerMock server;
-	private static WorldMock wMock;
 	private static WorldManager worldManager;
 //	private static TimeHandler timeHandler;
 	
@@ -37,8 +36,8 @@ class SetCommandsTest {
 	    server = MockBukkit.mock();
 //	    timeHandler = MockBukkit.load(TimeHandler.class);
 	    MockBukkit.load(TimeHandler.class);
-	    
-	    wMock = new WorldMock();
+
+		WorldMock wMock = new WorldMock();
 	    wMock.setName("test");
 	    
 	    server.addWorld(wMock);
@@ -49,8 +48,7 @@ class SetCommandsTest {
 	public static void tearDown() {
 		try {
 			MockBukkit.unmock();
-		} catch (AsyncTaskException e) {
-			// TODO: handle exception
+		} catch (AsyncTaskException ignored) {
 		}
 	}
 	
@@ -64,7 +62,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetBase() {
-		boolean condition = false;
+		boolean condition;
 		Field[] fields = null;
 		
 		// Recupera os campos da classe ConstantsWorldsConfig
@@ -83,12 +81,12 @@ class SetCommandsTest {
 			String fieldValue;
 			
 			try {
-				fieldValue = (String) f.get((Object)f);
+				fieldValue = (String) f.get(f);
 				
 				condition = SetCommand.commandSetBase(server.getConsoleSender(), worldManager, fieldValue, "");
 				
 				assertTrue(condition);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		}
 		
@@ -107,7 +105,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetTime() {
-		boolean condition = false;
+		boolean condition;
 		Set<String> times = TimeEnum.getList();
 
 		// testando com todos os valores do enum TIME
@@ -127,7 +125,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetTimeFixed() {
-		boolean condition = false;
+		boolean condition;
 		
 		// testando valor não numerico
 		condition = SetCommand.commandSetTimeFixed(server.getConsoleSender(), worldManager,  
@@ -156,7 +154,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetDurationDay() {
-		boolean condition = false;
+		boolean condition;
 		
 		// menor que o minimos - false
 		condition = SetCommand.commandSetDurationDay(server.getConsoleSender(), worldManager, 
@@ -179,7 +177,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetDurationNight() {
-		boolean condition = false;
+		boolean condition;
 		
 		// menor que o minimos - false
 		condition = SetCommand.commandSetDurationNight(server.getConsoleSender(), worldManager, 
@@ -202,7 +200,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetMoonPhase() {
-		boolean condition = false;
+		boolean condition;
 		
 		Set<String> set = MoonPhasesEnum.getList();
 
@@ -223,7 +221,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetThunder() {
-		boolean condition = false;
+		boolean condition;
 		
 		Set<String> set = ThunderEnum.getList();
 
@@ -244,7 +242,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetWeather() {
-		boolean condition = false;
+		boolean condition;
 		
 		Set<String> set = WeatherEnum.getList();
 		
@@ -265,7 +263,7 @@ class SetCommandsTest {
 
 	@Test
 	void testCommandSetEnabled() {
-		boolean condition = false;
+		boolean condition;
 
 		// testando com valor falso
 		condition = SetCommand.commandSetEnabled(server.getConsoleSender(), worldManager, 

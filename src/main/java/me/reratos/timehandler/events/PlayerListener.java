@@ -31,7 +31,6 @@ public class PlayerListener implements Listener {
 			int dif = (int) (24000 - w.getTime());
 			TimeSkipEvent timeSkipEvent = new TimeSkipEvent(w, SkipReason.NIGHT_SKIP, dif);
 			Bukkit.getPluginManager().callEvent(timeSkipEvent);
-			
 		}
 	}
 }

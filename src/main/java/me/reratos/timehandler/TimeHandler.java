@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -34,11 +35,12 @@ import me.reratos.timehandler.utils.UpdateChecker;
 public class TimeHandler extends JavaPlugin {
 
 	public static TimeHandler plugin;
+	public static Metrics metrics;
 	
 	public static FileConfiguration config;
 	public static YamlConfiguration worldsConfig;
 	public File fileWorldsConfig;
-	
+
 	// Construtores para teste
     public TimeHandler() {
         super();
@@ -52,7 +54,8 @@ public class TimeHandler extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		fileWorldsConfig = new File(getDataFolder(), Constants.FILE_NAME_WORLDS_CONFIG_YML);
-		
+
+		// check config files
 		if(!fileWorldsConfig.exists()) {
 			defineDefaultWorldsConfig();
 			saveWorldsConfig();
@@ -63,17 +66,21 @@ public class TimeHandler extends JavaPlugin {
 		saveDefaultConfig();
         config = getConfig().options().copyDefaults(true).configuration();
         saveConfig();
-        
+
+        // Initialize language and locale
         LocaleLoader.initialize();
 
+        // check version for plugin
 		if(config.getBoolean(ConstantsConfig.CHECK_UPDATE_PLUGIN)) {
 			CommandHandler.update(Constants.RESOURCE_ID);
 			lastVersionPlugin();
 		}
 
+		// initialize components
 		initializeTabCompleter();
 		initializeListeners();
 		initializeTasks();
+		initializeMetrics();
 		
 		sendMessage(LocaleLoader.getString(Messages.TIMEHANDLER_ENABLED));
 	}
@@ -274,11 +281,7 @@ public class TimeHandler extends JavaPlugin {
 		getCommand(Constants.COMMAND_RAIN).setTabCompleter(tabCompletion);
 		getCommand(Constants.COMMAND_CALM).setTabCompleter(tabCompletion);
 		getCommand(Constants.COMMAND_THUNDERING).setTabCompleter(tabCompletion);
-		
-//		try {
-//			getCommand(Constants.COMMAND_TH).setTabCompleter(tabCompletion);
-//		} catch (Exception e) {
-//		}
+
 	}
 	
 	private void initializeListeners() {
@@ -290,6 +293,14 @@ public class TimeHandler extends JavaPlugin {
 		for (String worldName : CommandHandler.getWorldsTimeHandler()) {
 			TimeManager.initTask(worldName);
 		}
+	}
+
+	private void initializeMetrics() {
+    	try {
+			metrics = new Metrics(this, Constants.METRICS_PLUGIN_ID);
+
+			metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "My value"));
+		} catch (LinkageError ignored) {}
 	}
 
 	private void lastVersionPlugin() {
