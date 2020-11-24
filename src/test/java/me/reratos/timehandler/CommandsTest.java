@@ -5,10 +5,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Set;
+import java.util.*;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+import me.reratos.timehandler.custom.ServerMockCustom;
 import org.bukkit.World;
 import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
@@ -24,15 +27,23 @@ import me.reratos.timehandler.enums.MoonPhasesEnum;
 @TestMethodOrder(OrderAnnotation.class)
 class CommandsTest {
 	
-	private static ServerMock server;
+	private static ServerMockCustom server;
 	private static WorldMock wMock;
 	private static TimeHandler timeHandler;
 
 	@BeforeAll
 	public static void setUp() {
-	    server = MockBukkit.mock();
+	    server = MockBukkit.mock(new ServerMockCustom());
 	    timeHandler = MockBukkit.load(TimeHandler.class);
-	    
+
+	    List<String> aliases = new ArrayList<>();
+	    aliases.add("th");
+	    timeHandler.getCommand("timehandler").setAliases(aliases);
+
+	    aliases.clear();
+	    aliases.add("th info");
+		timeHandler.getCommand("timehandler info").setAliases(aliases);
+
 	    wMock = new WorldMock();
 	    wMock.setName("test");
 	    
@@ -48,19 +59,25 @@ class CommandsTest {
 	}
 
 	/* ==== TEST /TIMEHANDLER HELP ==== */
-//	@Test
+	@Test
 //	@Disabled ("Unimplemented hasPermission")
-//	void testCommandTimehandlerHelp_ServerArgs_1() {
-//		boolean condition;
-//		String label = "timehandler";
-//		String[] args = {"help"};
-//		Command command = server.getPluginCommand(label);
-//
-//		assert command != null;
-//		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
-//
-//		assertTrue(condition);
-//	}
+	void testCommandTimehandlerHelp_ServerArgs_1() {
+		boolean condition;
+		String label = "timehandler";
+		String[] args = {"help"};
+		Command command = server.getPluginCommand(label);
+		PluginCommand pluginCommand = timeHandler.getCommand("timehandler info");
+
+		assert pluginCommand != null;
+		pluginCommand.setAliases(Collections.singletonList("th info"));
+
+		server.getConsoleSender().addPermission("timehandler.info.use");
+
+		assert command != null;
+		condition = timeHandler.onCommand(server.getConsoleSender(), command, label, args);
+
+		assertTrue(condition);
+	}
 
 	/* ==== TEST /TIMEHANDLER INFO ==== */
 	@Test

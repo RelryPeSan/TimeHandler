@@ -6,6 +6,8 @@ import org.bukkit.command.PluginCommand;
 
 import me.reratos.timehandler.TimeHandler;
 
+import java.util.List;
+
 public class HelpCommand {
 	
 	public static boolean helpAll(CommandSender sender) {
@@ -15,23 +17,27 @@ public class HelpCommand {
 		
 		if(sender.hasPermission("timehandler.info.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler info");
-			sender.sendMessage("/" + cmd.getAliases().get(0) + ChatColor.GREEN + " <world>");
+			String nameCommand = getAliaseOrName(cmd);
+			sender.sendMessage("/" + nameCommand + ChatColor.GREEN + " <world>");
 		}
 
 		if(sender.hasPermission("timehandler.list.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler list");
-			sender.sendMessage("/" + cmd.getAliases().get(0));
+			String nameCommand = getAliaseOrName(cmd);
+			sender.sendMessage("/" + nameCommand);
 		}
 
 		if(sender.hasPermission("timehandler.set.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler set");
-			sender.sendMessage("/" + cmd.getAliases().get(0) + ChatColor.GREEN + " <world> " + 
+			String nameCommand = getAliaseOrName(cmd);
+			sender.sendMessage("/" + nameCommand + ChatColor.GREEN + " <world> " +
 					ChatColor.LIGHT_PURPLE + "[<PROPERTY> <VALUE>]");
 		}
 
 		if(sender.hasPermission("timehandler.update.use")) {
 			cmd = TimeHandler.plugin.getCommand("timehandler update");
-			sender.sendMessage("/" + cmd.getAliases().get(0));
+			String nameCommand = getAliaseOrName(cmd);
+			sender.sendMessage("/" + nameCommand);
 		}
 
 		if(sender.hasPermission("timehandler.time.use")) {
@@ -57,6 +63,10 @@ public class HelpCommand {
 		}
 		
 		return true;
+	}
+
+	private static String getAliaseOrName(PluginCommand pluginCommand) {
+		return pluginCommand.getAliases().isEmpty() ? pluginCommand.getName() : pluginCommand.getAliases().get(0);
 	}
 	
 }
