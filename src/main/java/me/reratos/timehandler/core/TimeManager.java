@@ -72,12 +72,12 @@ public class TimeManager {
 		World w = Bukkit.getWorld(worldName);
 		
 		if(w != null) {
-			moonPhase(sender, moonPhase, w);
+			return moonPhase(sender, moonPhase, w);
 		} else {
 			TimeHandler.sendMessageLogo(sender, LocaleLoader.getString(Messages.WORLD_NOT_EXIST, worldName));
 		}
 		
-		return true;
+		return false;
 	}
 	
 	public static boolean moonPhase(CommandSender sender, MoonPhasesEnum moonPhase, World world) {
@@ -136,10 +136,6 @@ public class TimeManager {
 			Bukkit.getScheduler().runTaskTimer(TimeHandler.plugin, wm, 
 					TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS), 
 					TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
-//			Bukkit.getScheduler()
-//				.scheduleSyncRepeatingTask(TimeHandler.plugin, wm, 
-//						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS), 
-//						TimeHandler.config.getInt(ConstantsConfig.TICKS_CHECK_UPDATE_WORLDS));
 		} else {
 			TimeHandler.sendMessage(LocaleLoader.getString(Messages.WORLD_OPEN_INSTANCE_MANAGEMENT));
 			return;

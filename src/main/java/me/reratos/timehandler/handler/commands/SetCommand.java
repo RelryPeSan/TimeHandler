@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import me.reratos.timehandler.TimeHandler;
 import me.reratos.timehandler.core.TimeManager;
 import me.reratos.timehandler.core.WorldManager;
+import me.reratos.timehandler.enums.EnabledEnum;
 import me.reratos.timehandler.enums.MoonPhasesEnum;
 import me.reratos.timehandler.enums.ThunderEnum;
 import me.reratos.timehandler.enums.TimeEnum;
@@ -16,36 +17,20 @@ import me.reratos.timehandler.utils.Messages;
 
 public class SetCommand {
 
-	private final static String optionDefault 	= "default";
-	private final static String optionRain 		= "rain";
-	private final static String optionCalm 		= "calm";
-	private final static String optionNone 		= "none";
-	private final static String optionAlways 	= "always";
-	private final static String optionDay 		= "day";
-	private final static String optionNight 	= "night";
-	private final static String optionFixed 	= "fixed";
-	private final static String optionConfigured 	= "configured";
-	
-//	public static boolean commandSetWeather(CommandSender sender, String worldName, String property, String value) {
-//		return true;
-//	}
-	
 	public static boolean commandSetDefault(CommandSender sender, String worldName) {
 
 		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName, null);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".enabled", true);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".weather", Constants.DEFAULT);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".thunder", Constants.DEFAULT);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".time", Constants.DEFAULT);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".timeFixed", 1000);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".durationDay", 14000);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".durationNight", 10000);
-		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + ".moonPhase", Constants.DEFAULT);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_ENABLED, true);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_WEATHER, Constants.DEFAULT);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_THUNDER, Constants.DEFAULT);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_TIME, Constants.DEFAULT);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_TIME_FIXED, 1000);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_DURATION_DAY, 14000);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_DURATION_NIGHT, 10000);
+		TimeHandler.worldsConfig.set(Constants.WORLDS_DOT + worldName + Constants.DOT_MOON_PHASE, Constants.DEFAULT);
 		
 		TimeHandler.plugin.saveWorldsConfig();
 		
-//		TimeHandler.sendMessage(sender, ChatColor.YELLOW + "Default configuration created for the world: " + 
-//				ChatColor.GREEN + worldName);
 		sender.sendMessage(LocaleLoader.getString(Messages.COMMAND_SET_DEFAULT_CONFIGURATION, worldName));
 		TimeManager.initTask(worldName);
 		return true;
@@ -60,35 +45,35 @@ public class SetCommand {
 //		timeFixed: 	 0 - 24000
 		switch (property) {
 			case ConstantsWorldsConfig.ENABLED:
-				ret = commandSetEnabled(sender, worldManager, property, value);
+				ret = commandSetEnabled(sender, worldManager, value);
 				break;
 			
 			case ConstantsWorldsConfig.WEATHER:
-				ret = commandSetWeather(sender, worldManager, property, value);
+				ret = commandSetWeather(sender, worldManager, value);
 				break;
 				
 			case ConstantsWorldsConfig.THUNDER:
-				ret = commandSetThunder(sender, worldManager, property, value);
+				ret = commandSetThunder(sender, worldManager, value);
 				break;
 				
 			case ConstantsWorldsConfig.TIME:
-				ret = commandSetTime(sender, worldManager, property, value);
+				ret = commandSetTime(sender, worldManager, value);
 				break;
 				
 			case ConstantsWorldsConfig.TIME_FIXED:
-				ret = commandSetTimeFixed(sender, worldManager, property, value);
+				ret = commandSetTimeFixed(sender, worldManager, value);
 				break;
 				
 			case ConstantsWorldsConfig.DURATION_DAY:
-				ret = commandSetDurationDay(sender, worldManager, property, value);
+				ret = commandSetDurationDay(sender, worldManager, value);
 				break;
 				
 			case ConstantsWorldsConfig.DURATION_NIGHT:
-				ret = commandSetDurationNight(sender, worldManager, property, value);
+				ret = commandSetDurationNight(sender, worldManager, value);
 				break;
 				
 			case ConstantsWorldsConfig.MOON_PHASE:
-				ret = commandSetMoonPhase(sender, worldManager, property, value);
+				ret = commandSetMoonPhase(sender, worldManager, value);
 				break;
 	
 			default:
@@ -103,27 +88,25 @@ public class SetCommand {
 		return true;
 	}
 	
-	public static boolean commandSetTime(CommandSender sender, WorldManager worldManager, String property, String value) {
-		switch (value) {
-			case optionDefault:
-			case optionDay:
-			case optionNight:
-			case optionFixed:
-			case optionConfigured:
-				configSetValue(worldManager, property, value);
-				worldManager.setTime(TimeEnum.getEnumPorValue(value));
-				return true;
-			default:
-				messageValorInvalido(sender, property, value);
-				return false;
+	public static boolean commandSetTime(CommandSender sender, WorldManager worldManager, String value) {
+		TimeEnum t = TimeEnum.getEnumPorValue(value);
+		
+		if(t != null) {
+			configSetValue(worldManager, ConstantsWorldsConfig.TIME, value);
+			worldManager.setTime(t);
+			return true;
+		} else {
+			messageValorInvalido(sender, ConstantsWorldsConfig.TIME, value);
+			return false;
 		}
+		
 	}
 
-	public static boolean commandSetTimeFixed(CommandSender sender, WorldManager worldManager, String property, String value) {
+	public static boolean commandSetTimeFixed(CommandSender sender, WorldManager worldManager, String value) {
 		try {
 			int tempo = Integer.parseInt(value);
 			if(tempo >= 0 && tempo <= 24000) {
-				configSetValue(worldManager, property, Integer.parseInt(value));
+				configSetValue(worldManager, ConstantsWorldsConfig.TIME_FIXED, Integer.parseInt(value));
 				worldManager.setTimeFixed(tempo);
 			} else {
 				throw new NumberFormatException();
@@ -131,16 +114,16 @@ public class SetCommand {
 			return true;
 			
 		} catch (NumberFormatException e) {
-			messageValorInvalido(sender, property, value, " (0 - 24000)");
+			messageValorInvalido(sender, ConstantsWorldsConfig.TIME_FIXED, value, " (0 - 24000)");
 			return false;
 		}
 	}
 
-	public static boolean commandSetDurationDay(CommandSender sender, WorldManager worldManager, String property, String value) {
+	public static boolean commandSetDurationDay(CommandSender sender, WorldManager worldManager, String value) {
 		try {
 			int tempo = Integer.parseInt(value);
 			if(tempo >= (worldManager.getDurationDefaultDay() / 10) && tempo <= (worldManager.getDurationDefaultDay() * 10)) {
-				configSetValue(worldManager, property, Integer.parseInt(value));
+				configSetValue(worldManager, ConstantsWorldsConfig.DURATION_DAY, Integer.parseInt(value));
 				worldManager.setDurationDay(tempo);
 			} else {
 				throw new NumberFormatException();
@@ -148,18 +131,18 @@ public class SetCommand {
 			return true;
 			
 		} catch (NumberFormatException e) {
-			messageValorInvalido(sender, property, value, " (" + 
+			messageValorInvalido(sender, ConstantsWorldsConfig.DURATION_DAY, value, " (" +
 					(int)(worldManager.getDurationDefaultDay() / 10) + 
 					" - " + (int)(worldManager.getDurationDefaultDay() * 10) + ")");
 			return false;
 		}
 	}
 
-	public static boolean commandSetDurationNight(CommandSender sender, WorldManager worldManager, String property, String value) {
+	public static boolean commandSetDurationNight(CommandSender sender, WorldManager worldManager, String value) {
 		try {
 			int tempo = Integer.parseInt(value);
 			if(tempo >= (worldManager.getDurationDefaultNight() / 10) && tempo <= (worldManager.getDurationDefaultNight() * 10)) {
-				configSetValue(worldManager, property, Integer.parseInt(value));
+				configSetValue(worldManager, ConstantsWorldsConfig.DURATION_NIGHT, Integer.parseInt(value));
 				worldManager.setDurationNight(tempo);
 			} else {
 				throw new NumberFormatException();
@@ -167,63 +150,62 @@ public class SetCommand {
 			return true;
 			
 		} catch (NumberFormatException e) {
-			messageValorInvalido(sender, property, value, " (" + 
+			messageValorInvalido(sender, ConstantsWorldsConfig.DURATION_NIGHT, value, " (" +
 					(int)(worldManager.getDurationDefaultNight() / 10) + 
 					" - " + (int)(worldManager.getDurationDefaultNight() * 10) + ")");
 			return false;
 		}
 	}
 
-	public static boolean commandSetMoonPhase(CommandSender sender, WorldManager worldManager, String property, String value) {
-		for(String phase : MoonPhasesEnum.getList()) {
-			if(phase.toLowerCase().equals(value.toLowerCase())) {
-				configSetValue(worldManager, property, phase);
-				worldManager.setMoonPhase(MoonPhasesEnum.getEnumPorValue(phase));
-				return true;
-			}
-		}
-		messageValorInvalido(sender, property, value);
-		return false;
-	}
-	
-	public static boolean commandSetThunder(CommandSender sender, WorldManager worldManager, String property, String value) {
-		switch (value) {
-			case optionDefault:
-			case optionNone:
-			case optionAlways:
-				configSetValue(worldManager, property, value);
-				worldManager.setThunder(ThunderEnum.getEnumPorValue(value));
-				return true;
-			default:
-				messageValorInvalido(sender, property, value);
-				return false;
+	public static boolean commandSetMoonPhase(CommandSender sender, WorldManager worldManager, String value) {
+		MoonPhasesEnum mp = MoonPhasesEnum.getEnumPorValue(value);
+		
+		if(mp != null) {
+			configSetValue(worldManager, ConstantsWorldsConfig.MOON_PHASE, value);
+			worldManager.setMoonPhase(mp);
+			return true;
+		} else {
+			messageValorInvalido(sender, ConstantsWorldsConfig.MOON_PHASE, value);
+			return false;
 		}
 	}
 	
-	public static boolean commandSetWeather(CommandSender sender, WorldManager worldManager, String property, String value) {
-		switch (value) {
-			case optionDefault:
-			case optionRain:
-			case optionCalm:
-				configSetValue(worldManager, property, value);
-				worldManager.setWeather(WeatherEnum.getEnumPorValue(value));
-				return true;
-			default:
-				messageValorInvalido(sender, property, value);
-				return false;
+	public static boolean commandSetThunder(CommandSender sender, WorldManager worldManager, String value) {
+		ThunderEnum t = ThunderEnum.getEnumPorValue(value);
+		
+		if(t != null) {
+			configSetValue(worldManager, ConstantsWorldsConfig.THUNDER, value);
+			worldManager.setThunder(t);
+			return true;
+		} else {
+			messageValorInvalido(sender, ConstantsWorldsConfig.THUNDER, value);
+			return false;
 		}
 	}
 	
-	public static boolean commandSetEnabled(CommandSender sender, WorldManager worldManager, String property, String value) {
-		switch (value) {
-			case "true":
-			case "false":
-				configSetValue(worldManager, property, Boolean.parseBoolean(value));
-				worldManager.setEnabled(Boolean.parseBoolean(value));
-				return true;
-			default:
-				messageValorInvalido(sender, property, value);
-				return false;
+	public static boolean commandSetWeather(CommandSender sender, WorldManager worldManager, String value) {
+		WeatherEnum w = WeatherEnum.getEnumPorValue(value);
+		
+		if(w != null) {
+			configSetValue(worldManager, ConstantsWorldsConfig.WEATHER, value);
+			worldManager.setWeather(w);
+			return true;
+		} else {
+			messageValorInvalido(sender, ConstantsWorldsConfig.WEATHER, value);
+			return false;
+		}
+	}
+	
+	public static boolean commandSetEnabled(CommandSender sender, WorldManager worldManager, String value) {
+		EnabledEnum e = EnabledEnum.getEnumPorValue(value);
+		
+		if(e != null) {
+			configSetValue(worldManager, ConstantsWorldsConfig.ENABLED, Boolean.parseBoolean(value));
+			worldManager.setEnabled(Boolean.parseBoolean(value));
+			return true;
+		} else {
+			messageValorInvalido(sender, ConstantsWorldsConfig.ENABLED, value);
+			return false;
 		}
 	}
 

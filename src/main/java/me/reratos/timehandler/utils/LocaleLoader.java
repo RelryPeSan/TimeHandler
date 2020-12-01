@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import me.reratos.timehandler.TimeHandler;
@@ -99,7 +100,9 @@ public final class LocaleLoader {
     		try {
 				properties.load(locInput);
 				locInput.close();
-			} catch (IOException e) {
+			} catch (IOException | NullPointerException e) {
+				Bukkit.getServer().getConsoleSender()
+					.sendMessage(ChatColor.RED + "Language: " + locString + " not found.");
 				e.printStackTrace();
 			}
     	}

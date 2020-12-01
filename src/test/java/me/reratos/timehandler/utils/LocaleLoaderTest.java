@@ -61,7 +61,7 @@ class LocaleLoaderTest {
 			
 			try {
 				fieldName = f.getName();
-				fieldValue = (String) f.get((Object)f);
+				fieldValue = (String) f.get(f);
 				
 				String message = LocaleLoader.getString(fieldValue);
 				
@@ -85,7 +85,7 @@ class LocaleLoaderTest {
 		Properties properties = new Properties();
 		Field[] fields = null;
 		File file = new File("src/main/resources/lang/locale.properties");
-		FileInputStream fis = null;
+		FileInputStream fis;
 		List<String> listValueField = new ArrayList<>();
 		List<String> listValueKey = new ArrayList<>();
 
