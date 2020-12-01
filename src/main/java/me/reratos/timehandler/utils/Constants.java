@@ -20,6 +20,8 @@ public final class Constants {
 	
 	public final static String URL_PLUGIN = "https://www.spigotmc.org/resources/timehandler.83803/";
 
+	public final static String PLUGIN_ESSENTIALS 	= "Essentials";
+
 	public final static String COMMAND_DAY 			= "day";
 	public final static String COMMAND_THD 			= "thd";
 	public final static String COMMAND_NIGHT 		= "night";
